@@ -20,7 +20,9 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
+  username: trial_metadata_api
+  password: <%= ENV['TRIAL_METADATA_API_DATABASE_PASSWORD'] %>
+  
 development:
   <<: *default
   database: trial_metadata_api_development
@@ -80,6 +82,5 @@ test:
 #
 production:
   <<: *default
-  database: trial_metadata_api_production
-  username: trial_metadata_api
-  password: <%= ENV['TRIAL_METADATA_API_DATABASE_PASSWORD'] %>
+  database: initial_db
+

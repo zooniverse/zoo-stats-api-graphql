@@ -14,27 +14,27 @@
 # Configure Using Gemfile
 # gem 'pg'
 #
+
 default: &default
   adapter: postgresql
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: trial_metadata_api
-  password: <%= ENV['TRIAL_METADATA_API_DATABASE_PASSWORD'] %>
+  host: db
+  username: zoo_stats
+  password: zoo_stats
+  port: 5432
   
 development:
   <<: *default
-  database: trial_metadata_api_development
+  database: zoo_stats_database
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user that initialized the database.
   #username: trial_metadata_api
-
-  # The password associated with the postgres role (username).
-  #password:
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -59,28 +59,9 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: trial_metadata_api_test
+  database: zoo_stats_database_test
 
-# As with config/secrets.yml, you never want to store sensitive information,
-# like your database password, in your source code. If your source code is
-# ever seen by anyone, they now have access to your database.
-#
-# Instead, provide the password as a unix environment variable when you boot
-# the app. Read http://guides.rubyonrails.org/configuring.html#configuring-a-database
-# for a full rundown on how to provide these environment variables in a
-# production deployment.
-#
-# On Heroku and other platform providers, you may have a full connection URL
-# available as an environment variable. For example:
-#
-#   DATABASE_URL="postgres://myuser:mypass@localhost/somedatabase"
-#
-# You can use this database configuration with:
-#
-#   production:
-#     url: <%= ENV['DATABASE_URL'] %>
-#
 production:
   <<: *default
-  database: initial_db
+  database: zoo_stats_database
 

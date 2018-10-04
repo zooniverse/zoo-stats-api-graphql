@@ -1,5 +1,5 @@
 timescale:
-  image: timescale/timescaledb-postgis: 0.12.1-pg10
+  image: timescale/timescaledb-postgis:0.12.1-pg10
   environment:
     - "POSTGRES_USER=zoo_stats"
     - "POSTGRES_PASSWORD=zoo_stats"
@@ -26,4 +26,4 @@ zoo_stats:
     - "BUNDLE_BIN=/gem_cache/bin"
     - "DISABLE_SPRING=true"
   links:
-    - timescale: db
+    - timescale:db

@@ -20,7 +20,7 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: 5
   host: db
   username: zoo_stats
   password: zoo_stats
@@ -28,7 +28,7 @@ default: &default
   
 development:
   <<: *default
-  database: zoo_stats_database
+  database: zoo_stats_development
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -59,9 +59,5 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: zoo_stats_database_test
-
-production:
-  <<: *default
-  database: zoo_stats_database
+  database: zoo_stats_test
 

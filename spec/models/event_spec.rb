@@ -11,7 +11,7 @@ RSpec.describe Event, type: :model do
     }
   end
 
-  let(:event) { create(:event, **attributes) }
+  let!(:event) { create(:event, **attributes) }
 
   describe 'model validations' do
     it { expect(event).to allow_value(attributes[:event_id]).for(:event_id) }
@@ -22,5 +22,13 @@ RSpec.describe Event, type: :model do
 
     it { expect(event).to allow_value(attributes[:event_time]).for(:event_time) }
     it { expect(event).to validate_presence_of(:event_time) }
+
+    it 'has composite primary key' do
+      expect(Event.find([
+        attributes[:event_id],
+        attributes[:event_source],
+        attributes[:event_time]
+        ])).to eq(event)
+    end
   end
 end

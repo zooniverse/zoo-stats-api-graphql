@@ -33,3 +33,13 @@ Once all the above steps complete you will have a working copy of the checked ou
 
 #Not yet implemented
 0. To seed the development database with an Admin user and a Doorkeeper client application for API access run `docker-compose run --rm --entrypoint="bundle exec rails runner db/dev_seed_data/dev_seed_data.rb" zoo_stats`
+
+#### Testing
+
+1. Setup as above, then run `docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle install" zoo_stats` to setup the test environment
+
+0. Setup the test database
+    * Run: `docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle exec rake db:setup" zoo_stats`
+
+0. Run the tests
+    * Run: `docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rspec" zoo_stats`

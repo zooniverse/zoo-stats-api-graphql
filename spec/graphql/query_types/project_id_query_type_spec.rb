@@ -1,5 +1,5 @@
 RSpec.describe Types::QueryType do
-  subject { Types::QueryType }
+  subject(:query_type) { Types::QueryType }
   let(:context) { {} }
   let(:variables) { {} }
   # Call `result` to execute the query
@@ -20,7 +20,7 @@ RSpec.describe Types::QueryType do
     it 'has a :project_id_query field that returns Event types' do
       field_name = "projectIdQuery"
       field_type = "[Event!]!"
-      expect(subject.fields[field_name].type.to_type_signature).to eq(field_type)
+      expect(query_type.fields[field_name].type.to_type_signature).to eq(field_type)
     end
 
     let(:projects_id) { 456 }

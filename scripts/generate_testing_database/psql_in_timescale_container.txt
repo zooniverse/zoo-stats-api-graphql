@@ -1,0 +1,125 @@
+view Docker database
+docker exec -it zoo_stats_api_prototype_timescale_1 psql -U zoo_stats zoo_stats_development
+
+
+\dt                 # view list of tables
+\d events           # view table schema
+\du                 # view list of users
+\l                  # view list of databases
+\q                  # quit
+
+# Add data from csv file
+docker cp input_count_1M.csv zoo_stats_api_prototype_timescale_1:/input.csv
+
+#COPY events(event_id,event_type,event_source,event_time,event_created_at,project_id,workflow_id,user_id,subject_ids,subject_urls,lang,user_agent,user_name,project_name,board_id,discussion_id,focus_id,focus_type,section,body,url,focus,board,tags,user_zooniverse_id,zooniverse_id) 
+
+COPY events
+FROM '/input.csv'
+DELIMITER ',' CSV HEADER;
+
+
+                                        Table "public.events"
+       Column       |            Type             | Collation | Nullable |          Default          
+--------------------+-----------------------------+-----------+----------+---------------------------
+ event_id           | bigint                      |           | not null | 
+ event_type         | character varying           |           |          | 
+ event_source       | character varying           |           | not null | 
+ event_time         | timestamp without time zone |           | not null | 
+ event_created_at   | timestamp without time zone |           |          | 
+ project_id         | bigint                      |           |          | 
+ workflow_id        | bigint                      |           |          | 
+ user_id            | bigint                      |           |          | 
+ subject_ids        | character varying[]         |           |          | '{}'::character varying[]
+ subject_urls       | character varying[]         |           |          | '{}'::character varying[]
+ lang               | character varying           |           |          | 
+ user_agent         | character varying           |           |          | 
+ user_name          | character varying           |           |          | 
+ project_name       | character varying           |           |          | 
+ board_id           | bigint                      |           |          | 
+ discussion_id      | bigint                      |           |          | 
+ focus_id           | bigint                      |           |          | 
+ focus_type         | character varying           |           |          | 
+ section            | character varying           |           |          | 
+ body               | text                        |           |          | 
+ url                | character varying           |           |          | 
+ focus              | character varying           |           |          | 
+ board              | character varying           |           |          | 
+ tags               | character varying[]         |           |          | '{}'::character varying[]
+ user_zooniverse_id | bigint                      |           |          | 
+ zooniverse_id      | bigint                      |           |          | 
+ created_at         | timestamp without time zone |           | not null | 
+ updated_at         | timestamp without time zone |           | not null | 
+Indexes:
+    "events_pkey" PRIMARY KEY, btree (event_id, event_source, event_time)
+    "events_event_time_idx" btree (event_time DESC)
+Triggers:
+    ts_insert_blocker BEFORE INSERT ON events FOR EACH ROW EXECUTE PROCEDURE _timescaledb_internal.insert_blocker()
+Number of child tables: 1 (Use \d+ to list them.)
+
+
+## Function test_scalability
+
+CREATE OR REPLACE FUNCTION test_scalability
+   (sql_txt VARCHAR(2000), n INT)
+   RETURNS SETOF RECORD AS
+$$
+DECLARE
+   tim   INTERVAL[300];
+   rec   INT[300];
+   strt  TIMESTAMP;
+   v_rec RECORD;
+   iter  INT;
+   user_id   INT;
+   cnt   INT;
+   rnd   INT;
+BEGIN
+   FOR iter  IN 0..n LOOP
+      FOR user_id IN 0..299 LOOP
+         IF iter = 0 THEN
+           tim[user_id] := 0;
+           rec[user_id] := 0;
+         END IF;
+         rnd  := CEIL(RANDOM() * 10000);
+         strt := CLOCK_TIMESTAMP();
+
+         EXECUTE 'select count(*) from (' || sql_txt || ') tbl'
+            INTO cnt
+           USING user_id, rnd;
+
+         tim[user_id] := tim[user_id] + CLOCK_TIMESTAMP() - strt;
+         rec[user_id] := rec[user_id] + cnt;
+
+         IF iter = n THEN
+            SELECT INTO v_rec user_id, tim[user_id], rec[user_id];
+            RETURN NEXT v_rec;
+         END IF;
+      END LOOP;
+   END LOOP;
+
+   RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+## Running test_scalability
+
+SELECT *
+  FROM test_scalability('SELECT * '
+                      ||  'FROM events ', 100)
+       AS (seconds INTERVAL, cnt_rows INT);
+
+## Running with partitioning on user_id #$1 == user, $2 == rnd
+# select all with known user_id and project_id
+SELECT *
+  FROM test_scalability('SELECT * '
+                      ||  'FROM events '
+                      || 'WHERE user_id=$1 '
+                      ||   'AND project_id=$2', 10)
+       AS (user_id INT, seconds INTERVAL, cnt_rows INT);
+
+# select all with known user_id and event_type
+SELECT *
+  FROM test_scalability('SELECT * '
+                      ||  'FROM events '
+                      || 'WHERE user_id=$1 '
+                      ||   'AND event_type=''classification''', 10)
+       AS (user_id INT, seconds INTERVAL, cnt_rows INT);

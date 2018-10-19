@@ -16,11 +16,10 @@ for i in {0..14}; do
     docker exec zoo_stats_api_prototype_timescale_1 psql -U zoo_stats zoo_stats_development -f input.sql
 
     echo "Running database tests"
-    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats
-
     output_path=$path${file_array[$i]}_output.csv
-    echo "Saving output file to $output_path"
-    docker cp zoo_stats_api_prototype_timescale_1:/output.csv $output_path
+    > $output_path
+    echo 
+    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> $output_path
 
     break
 done

@@ -4,7 +4,9 @@ timescale:
     - "POSTGRES_USER=zoo_stats"
     - "POSTGRES_PASSWORD=zoo_stats"
   ports:
-    - "5432"
+    - "5432:5432"
+  volumes:
+    - /Volumes/ANDRE:/mnt/
 
 gem_cache:
   image: busybox

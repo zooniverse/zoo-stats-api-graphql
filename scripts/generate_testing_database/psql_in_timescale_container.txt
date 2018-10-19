@@ -1,6 +1,10 @@
 view Docker database
 docker exec -it zoo_stats_api_prototype_timescale_1 psql -U zoo_stats zoo_stats_development
 
+start background database input process
+docker exec -it zoo_stats_api_prototype_timescale_1 bash
+psql -U zoo_stats zoo_stats_development -f input.sql &
+
 
 \dt                 # view list of tables
 \d events           # view table schema
@@ -123,3 +127,61 @@ SELECT *
                       || 'WHERE user_id=$1 '
                       ||   'AND event_type=''classification''', 10)
        AS (user_id INT, seconds INTERVAL, cnt_rows INT);
+
+
+## Function test_running_time
+CREATE OR REPLACE FUNCTION test_running_time
+   (sql_txt VARCHAR(2000), n INT)
+   RETURNS SETOF RECORD AS
+$$
+DECLARE
+   tim   INTERVAL;
+   rec   INT;
+   strt  TIMESTAMP;
+   v_rec RECORD;
+   i   INT;
+   cnt   INT;
+BEGIN
+    tim := 0;
+    rec := 0;
+    strt := CLOCK_TIMESTAMP();
+    FOR i IN 0..n LOOP
+        EXECUTE 'select count(*) from (' || sql_txt || ') tbl'
+          INTO cnt
+          USING i;
+    END LOOP;
+
+    tim := tim + CLOCK_TIMESTAMP() - strt;
+    tim := tim / n;
+    rec := rec + cnt;
+
+    SELECT INTO v_rec n, tim, rec;
+    RETURN NEXT v_rec;
+   RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+# select all with user_id 1-n
+SELECT *
+  FROM test_running_time('SELECT * '
+                      ||  'FROM events '
+                      || 'WHERE user_id=836676 '
+                      ||   'AND event_type=''classification''', 100)
+       AS (repeats INT, average_seconds INTERVAL, cnt_rows INT);
+
+# time_bucket (836676 most total, 945559 most comments)
+SELECT user_id, event_type, time_bucket('5 seconds', event_time) as interval, count(*)
+FROM events
+WHERE user_id = 945559
+GROUP BY user_id, event_type, interval
+ORDER BY interval DESC;
+
+# time_bucket timed
+SELECT *
+  FROM test_running_time('SELECT user_id, event_type, time_bucket(''5 seconds'', event_time) as interval, count(*)
+                            FROM events
+                            WHERE user_id = 945559
+                            AND event_type = ''classification''
+                            GROUP BY user_id, event_type, interval
+                            ORDER BY interval DESC', 100)
+       AS (repeats INT, average_seconds INTERVAL, cnt_rows INT);

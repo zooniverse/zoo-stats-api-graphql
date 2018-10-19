@@ -1,3 +1,7 @@
-puts 'hi, I am being run'
+require "benchmark"
 
-puts Event.where(event_id: 1)
+time = Benchmark.measure do
+  results = Event.where(event_id: [1, 2, 3, 4])
+end
+
+puts time

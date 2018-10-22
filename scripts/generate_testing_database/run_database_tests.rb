@@ -2,15 +2,15 @@ require "benchmark"
 require_relative "generate_events"
 
 repeat_count = 100
-test_user_id = 120
+test_user_id = 23450
 database_size = ARGV[0]
 times = []
 
 4.times do
   time = Benchmark.measure do
     repeat_count.times do
-      Event.where(user_id: test_user_id, event_type: "classification")
-      Event.where(user_id: test_user_id, event_type: "comment")
+      Event.where(user_id: test_user_id, event_type: "classification").group("project_id").count
+      Event.where(user_id: test_user_id, event_type: "comment").group("project_id").count
     end
   end
   times.append(time.total)

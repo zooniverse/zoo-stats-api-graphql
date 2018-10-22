@@ -1,11 +1,26 @@
 require "benchmark"
 require_relative "generate_events"
 
-puts "test01"
-puts "test02"
-puts "test03"
-generator_1 = Generator.new(100_000_000)
-100.times { generator_1.generate_event }
+repeat_count = 100
+test_user_id = 120
+database_size = ARGV[0]
+times = []
+
+4.times do
+  time = Benchmark.measure do
+    repeat_count.times do
+      Event.where(user_id: test_user_id, event_type: "classification")
+      Event.where(user_id: test_user_id, event_type: "comment")
+    end
+  end
+  times.append(time.total)
+  #generator_1 = Generator.new(100_000_000)
+  #100.times { generator_1.generate_event }
+end
+
+puts "#{database_size},#{repeat_count},#{times[0]},#{times[1]},#{times[2]},#{times[3]}"
+# output CSV layout
+# database_size,repeat_count,cold,one,two,three
 
 =begin
 test_block = 

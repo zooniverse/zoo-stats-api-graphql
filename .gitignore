@@ -24,3 +24,4 @@
 
 # Ignore generated database files
 /scripts/generate_testing_database/files/*
+testing_output.csv

@@ -6,7 +6,7 @@ timescale:
   ports:
     - "5432"
   volumes:
-    - /Volumes/ANDRE:/mnt/
+    - ~/Data/:/mnt/
 
 gem_cache:
   image: busybox

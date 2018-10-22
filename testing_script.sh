@@ -6,6 +6,7 @@ file_array=(input01 input02)
 sizes=(100K 200K)
 path="./scripts/generate_testing_database/files/"
 script_path="./scripts/generate_testing_database/"
+> testing_output.csv
 
 echo "***Script starting***"
 
@@ -21,8 +22,7 @@ for i in {0..1}; do
     echo "***Test setup***"
     docker stop zoo_stats_api_prototype_timescale_1
     docker start zoo_stats_api_prototype_timescale_1
-    output_path=$path${file_array[$i]}_output.csv
-    > $output_path
+
     echo "***Running database tests***"
-    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> $output_path
+    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> testing_output.csv
 done

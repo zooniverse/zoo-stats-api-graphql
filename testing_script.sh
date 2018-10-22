@@ -8,11 +8,11 @@ path="./scripts/generate_testing_database/files/"
 script_path="./scripts/generate_testing_database/"
 
 echo "***Script starting***"
-echo "***Setup database***"
-docker-compose run --rm --entrypoint="bundle exec rake db:reset" zoo_stats
 
 for i in {0..1}; do
     echo "|||Database size ${sizes[$i]}|||"
+    echo "***Setup database***"
+    docker-compose run --rm --entrypoint="bundle exec rake db:reset" zoo_stats
     echo "***Importing data***"
     docker cp $path${file_array[$i]}.csv zoo_stats_api_prototype_timescale_1:/input.csv
     docker cp ${script_path}add_csv.sql zoo_stats_api_prototype_timescale_1:/input.sql

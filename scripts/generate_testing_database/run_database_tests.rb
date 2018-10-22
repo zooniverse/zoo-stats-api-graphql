@@ -4,9 +4,8 @@ require_relative "generate_events"
 puts "test01"
 puts "test02"
 puts "test03"
-events_generator = Utilities.new
-events_generator.event_id = 100_000
-events_generator.generate_event
+generator_1 = Generator.new(100_000_000)
+100.times { generator_1.generate_event }
 
 =begin
 test_block = 

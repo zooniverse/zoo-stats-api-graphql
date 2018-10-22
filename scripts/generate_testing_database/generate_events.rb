@@ -1,4 +1,4 @@
-class Utilities
+class Generator
   attr_accessor :event_id
   CLASSIFICATION_TO_COMMENT_RATIO = 50
   NIL_USER_TO_LOGGED_IN_RATIO = 1
@@ -12,6 +12,10 @@ class Utilities
   DISCUSSION_ID_MAX = 1_000
   FOCUS_ID_MAX = 10
   FOCUS_TYPES = ['chat', 'image analysis']
+
+  def initialize(event_id)
+    self.event_id = event_id
+  end
 
   def generate_event
     user_id_options = [rand(1..USER_ID_MAX)]

@@ -2,14 +2,18 @@ require "benchmark"
 require_relative "generate_events"
 
 repeat_count = 100
-test_user_id = nil
 database_size = ARGV[0]
 times = []
+
+# Query variables
+test_user_id = nil
+time_value = 1
+time_units = 'seconds'
 
 4.times do
   time = Benchmark.measure do
     repeat_count.times do
-      time_bucket = Event.select("time_bucket('1 seconds', event_time) AS bucket, count(*), project_id").group("bucket")
+      time_bucket = Event.select("time_bucket('#{time_value} #{time_units}', event_time) AS bucket, count(*), project_id").group("bucket")
       time_bucket.where(user_id: test_user_id, event_type: "classification").group("project_id")
       time_bucket.where(user_id: test_user_id, event_type: "comment").group("project_id")
     end

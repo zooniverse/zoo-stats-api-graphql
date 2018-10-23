@@ -2,15 +2,16 @@ require "benchmark"
 require_relative "generate_events"
 
 repeat_count = 100
-test_user_id = 23450
+test_user_id = nil
 database_size = ARGV[0]
 times = []
 
 4.times do
   time = Benchmark.measure do
     repeat_count.times do
-      Event.where(user_id: test_user_id, event_type: "classification").group("project_id").count
-      Event.where(user_id: test_user_id, event_type: "comment").group("project_id").count
+      time_bucket = Event.select("time_bucket('1 seconds', event_time) AS bucket, count(*), project_id").group("bucket")
+      time_bucket.where(user_id: test_user_id, event_type: "classification").group("project_id")
+      time_bucket.where(user_id: test_user_id, event_type: "comment").group("project_id")
     end
   end
   times.append(time.total)
@@ -22,34 +23,20 @@ puts "#{database_size},#{repeat_count},#{times[0]},#{times[1]},#{times[2]},#{tim
 # output CSV layout
 # database_size,repeat_count,cold,one,two,three
 
-=begin
-test_block = 
-
-4.times do
-  puts test_block
-  time = Benchmark.measure do
-    results = Event.where(event_id: [1, 2, 3, 4])
-  end
-  puts results
-  puts time
-end
-=end
-
-=begin
-def timing_test(title)
-  puts title
-  ["cold", 1, 2, 3].each do |run|
-    puts run
-    time = Benchmark.measure { yield }
-    puts time
-  end
-end
-
-[
-  "Multiple where":       { Event.where(event_id: [1, 2, 3, 4]) },
-  "Ordered selection":    {     Event.limit(5).offset(30) },
-  "Where and count":      { Event.where(user_id: 1).group("project_id").count }
-]
 
 
-=end
+## ActiveRecord queries
+
+# select (add SQL code in "")
+# Time bucket:          Event.select("time_bucket('1 seconds', event_time) AS bucket, count(*)").group("bucket")
+
+# where (search for matching records)
+# Specific where:       Event.where(user_id: 1)
+# Between where:        Event.where(user_id: 1..1000)
+# In where:             Event.where(event_id: [1, 3, 4, 11])
+
+# other methods
+# Bounded selection:    Event.limit(5).offset(30)
+# Full count:           Event.all.count
+# Group by:             Event.all.group("project_id")
+# Attributes:           Event.all.first.attributes.to_yaml

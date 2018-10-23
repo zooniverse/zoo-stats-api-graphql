@@ -7,7 +7,7 @@ path="/Users/samuelaroney/Data/"
 script_path="./scripts/generate_testing_database/"
 repeats=1000
 writes="no"
-output_file="./testing_results/testing_output-${repeats}-${writes}_writes.csv"
+output_file="./testing_results/test_output-${repeats}-${writes}_writes.csv"
 
 # List of inputs to use
 quick_list=(0 1)
@@ -17,7 +17,7 @@ all_list=(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 echo "***Script setup***"
 echo "database_size,cold,one,two,three" > $output_file
 
-for i in ${quick_list[@]}
+for i in ${start_list[@]}
 do
     echo "|||Database size ${sizes[$i]}|||"
     echo "***Reset database***"

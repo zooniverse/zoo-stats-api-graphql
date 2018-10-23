@@ -1,7 +1,7 @@
 require "benchmark"
 require_relative "generate_events"
 
-repeat_count = 100
+repeat_count = 1000
 database_size = ARGV[0]
 times = []
 
@@ -18,7 +18,7 @@ time_units = 'seconds'
       time_bucket.where(user_id: test_user_id, event_type: "comment").group("project_id")
     end
   end
-  times.append(time.total)
+  times.append(time.total.round(5))
   #generator_1 = Generator.new(100_000_000)
   #100.times { generator_1.generate_event }
 end

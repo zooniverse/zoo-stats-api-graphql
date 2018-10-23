@@ -5,6 +5,9 @@ sizes=(100K 200K 300K 400K 500K 750K 1M 2M 5M 10M 20M 50M 100M 500M 1B)
 sizes_i=(100000 200000 300000 400000 500000 750000 1000000 2000000 5000000 10000000 20000000 50000000 100000000 500000000 1000000000)
 path="/Users/samuelaroney/Data/"
 script_path="./scripts/generate_testing_database/"
+repeats=1000
+writes="no"
+output_file="./testing_results/testing_output-${repeats}-${writes}_writes.csv"
 
 # List of inputs to use
 quick_list=(0 1)
@@ -12,7 +15,7 @@ start_list=(0 1 2 9)
 all_list=(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 
 echo "***Script setup***"
-echo "database_size,repeat_count,cold,one,two,three" > testing_output.csv
+echo "database_size,cold,one,two,three" > $output_file
 
 for i in ${quick_list[@]}
 do
@@ -34,5 +37,5 @@ do
     docker start zoo_stats_api_prototype_timescale_1
 
     echo "***Running database tests***"
-    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb ${sizes_i[$i]}" zoo_stats >> testing_output.csv
+    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb ${sizes_i[$i]} $repeats $writes" zoo_stats >> $output_file
 done

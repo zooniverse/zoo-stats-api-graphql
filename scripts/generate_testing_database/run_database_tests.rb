@@ -1,14 +1,15 @@
 require "benchmark"
 require_relative "generate_events"
 
-repeat_count = 1000
-database_size = ARGV[0]
-times = []
+database_size  = ARGV[0]
+repeat_count   = ARGV[1].to_i
+write_bool     = ARGV[2]
+times          = []
 
 # Query variables
-test_user_id = nil
-time_value = 1
-time_units = 'seconds'
+test_user_id   = nil
+time_value     = 1
+time_units     = 'seconds'
 
 4.times do
   time = Benchmark.measure do
@@ -23,7 +24,7 @@ time_units = 'seconds'
   #100.times { generator_1.generate_event }
 end
 
-puts "#{database_size},#{repeat_count},#{times[0]},#{times[1]},#{times[2]},#{times[3]}"
+puts "#{database_size},#{times[0]},#{times[1]},#{times[2]},#{times[3]}"
 # output CSV layout
 # database_size,repeat_count,cold,one,two,three
 

@@ -1,9 +1,14 @@
 require "benchmark"
 # Change to env variables
-database_size  = ARGV[0]
-repeat_count   = ARGV[1].to_i
-write_bool     = ARGV[2]
-times          = []
+database_size   = ARGV[0]
+unless database_size
+  database_size = ENV["database_size"]
+end
+repeat_count    = ARGV[1]
+unless repeat_count
+  repeat_count  = ENV["repeats"]
+end
+repeat_count = repeat_count.to_i
 
 # Query variables
 time_value     = 1

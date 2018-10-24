@@ -12,22 +12,18 @@ output_file="./testing_results/test_output-${repeats}-${writes}_writes.csv"
 # List of inputs to use
 quick_list=(0 1)
 start_list=(0 1 2 9)
+extra_list=(0 1 2 9 10 11 14)
 all_list=(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 
 echo "***Script setup***"
-echo "database_size,cold,one,two,three" > $output_file
+echo "database_size,time,cold" > $output_file
 
-for i in ${start_list[@]}
+for i in ${quick_list[@]}
 do
     echo "|||Database size ${sizes[$i]}|||"
     echo "***Reset database***"
     docker-compose run --rm --entrypoint="bundle exec rake db:reset" zoo_stats
     echo "***Importing data***"
-    # Import outside in
-    # docker exec zoo_stats_api_prototype_timescale_1 bash cp /mnt/${file_array[$i]}.csv /input.csv
-    # docker cp $path${file_array[$i]}.csv zoo_stats_api_prototype_timescale_1:/input.csv
-    # docker cp ${script_path}add_csv.sql zoo_stats_api_prototype_timescale_1:/input.sql
-    # docker exec zoo_stats_api_prototype_timescale_1 psql -U zoo_stats zoo_stats_development -f input.sql
 
     # Import using mounted folder (see docker-compose)
     docker exec zoo_stats_api_prototype_timescale_1 psql -U zoo_stats zoo_stats_development -c "COPY events FROM '/mnt/${file_array[$i]}.csv' DELIMITER ',' CSV HEADER;"
@@ -37,5 +33,7 @@ do
     docker start zoo_stats_api_prototype_timescale_1
 
     echo "***Running database tests***"
-    docker-compose run --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb ${sizes_i[$i]} $repeats $writes" zoo_stats >> $output_file
+    database_size=${sizes_i[$i]}
+    docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> $output_file
+    echo "***Tests completed***"
 done

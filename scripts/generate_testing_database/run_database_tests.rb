@@ -11,7 +11,7 @@ time_units     = 'seconds'
 
 # cold run
 time = Benchmark.measure do
-    test_user_id = nil
+    test_user_id = rand(1..1_000_000)
     time_bucket = Event.select("time_bucket('#{time_value} #{time_units}', event_time) AS bucket, count(*)").group("bucket")
     time_bucket.where(user_id: test_user_id, event_type: "classification").load
     time_bucket.where(user_id: test_user_id, event_type: "comment").load
@@ -21,7 +21,7 @@ puts "#{database_size},#{time.total.round(5)},True"
 # actual runs
 repeat_count.times do
   time = Benchmark.measure do
-    test_user_id = nil
+    test_user_id = rand(1..1_000_000)
     time_bucket = Event.select("time_bucket('#{time_value} #{time_units}', event_time) AS bucket, count(*)").group("bucket")
     time_bucket.where(user_id: test_user_id, event_type: "classification").load
     time_bucket.where(user_id: test_user_id, event_type: "comment").load

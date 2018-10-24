@@ -34,6 +34,11 @@ do
 
     echo "***Running database tests***"
     database_size=${sizes_i[$i]}
-    docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> $output_file
+    if [ $writes = "yes" ]
+    then
+        docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bundle exec foreman start" zoo_stats >> $output_file
+    else
+        docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> $output_file
+    fi
     echo "***Tests completed***"
 done

@@ -20,14 +20,9 @@ for file in os.listdir(directory):
         file_directory = os.path.join(directory_in_str, filename)
         root_name = filename[:-4]
 
-        df_comb = pd.read_csv(file_directory, index_col=0)
-        df_comb = df_comb.T.stack()
-        df_comb.name = 'comb'
-        df_comb.index.rename(["iterations", "database_size"], inplace=True)
-        df_comb = df_comb.reset_index()
-        df_comb["iteration"] = np.vectorize(fx)(df_comb["iterations"])
+        df_comb = pd.read_csv(file_directory)
         ax = plt.figure(root_name)
-        fig = sns.lineplot(x = "database_size", y = "comb", hue = "iteration", ci='sd', data=df_comb)
+        fig = sns.lineplot(x = "database_size", y = "time", hue = "cold", ci='sd', data=df_comb)
         plt.setp(fig, xlabel="Size of database", ylabel="Running time (s)")
         plt.xscale('log')
         

@@ -1,29 +1,36 @@
 require "benchmark"
-
+# Change to env variables
 database_size  = ARGV[0]
 repeat_count   = ARGV[1].to_i
 write_bool     = ARGV[2]
 times          = []
 
 # Query variables
-test_user_id   = nil
 time_value     = 1
 time_units     = 'seconds'
 
-4.times do
+# cold run
+time = Benchmark.measure do
+    test_user_id = nil
+    time_bucket = Event.select("time_bucket('#{time_value} #{time_units}', event_time) AS bucket, count(*), project_id").group("bucket")
+    time_bucket.where(user_id: test_user_id, event_type: "classification").group("project_id").load
+    time_bucket.where(user_id: test_user_id, event_type: "comment").group("project_id").load
+end
+puts "#{database_size},#{time.total.round(5)},True"
+
+# actual runs
+repeat_count.times do
   time = Benchmark.measure do
-    repeat_count.times do
-      time_bucket = Event.select("time_bucket('#{time_value} #{time_units}', event_time) AS bucket, count(*), project_id").group("bucket")
-      time_bucket.where(user_id: test_user_id, event_type: "classification").group("project_id")
-      time_bucket.where(user_id: test_user_id, event_type: "comment").group("project_id")
-    end
+    test_user_id = nil
+    time_bucket = Event.select("time_bucket('#{time_value} #{time_units}', event_time) AS bucket, count(*), project_id").group("bucket")
+    time_bucket.where(user_id: test_user_id, event_type: "classification").group("project_id").load
+    time_bucket.where(user_id: test_user_id, event_type: "comment").group("project_id").load
   end
-  times.append(time.total.round(5))
+  puts "#{database_size},#{time.total.round(5)},False"
 end
 
-puts "#{database_size},#{times[0]},#{times[1]},#{times[2]},#{times[3]}"
 # output CSV layout
-# database_size,repeat_count,cold,one,two,three
+# database_size,time,cold
 
 
 

@@ -1,5 +1,4 @@
 require "benchmark"
-require_relative "generate_events"
 
 database_size  = ARGV[0]
 repeat_count   = ARGV[1].to_i
@@ -20,8 +19,6 @@ time_units     = 'seconds'
     end
   end
   times.append(time.total.round(5))
-  #generator_1 = Generator.new(100_000_000)
-  #100.times { generator_1.generate_event }
 end
 
 puts "#{database_size},#{times[0]},#{times[1]},#{times[2]},#{times[3]}"

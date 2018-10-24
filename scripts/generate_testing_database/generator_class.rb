@@ -14,7 +14,7 @@ class Generator
   FOCUS_TYPES = ['chat', 'image analysis']
 
   def initialize(event_id)
-    self.event_id = event_id
+    self.event_id = event_id.to_i
   end
 
   def generate_event

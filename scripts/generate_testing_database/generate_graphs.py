@@ -30,4 +30,5 @@ for file in os.listdir(directory):
         axes.set_ylim([0, None])
 
         plt.savefig(os.path.join(directory_in_str, root_name + '.png'))
-        plt.show()
+
+plt.show()

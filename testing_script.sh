@@ -6,7 +6,7 @@ sizes_i=(100000 200000 300000 400000 500000 750000 1000000 2000000 5000000 10000
 path="/Users/samuelaroney/Data/"
 script_path="./scripts/generate_testing_database/"
 repeats=1000
-writes="no"
+writes="yes"
 output_file="./testing_results/test_output-${repeats}-${writes}_writes.csv"
 
 # List of inputs to use
@@ -36,7 +36,9 @@ do
     database_size=${sizes_i[$i]}
     if [ $writes = "yes" ]
     then
-        docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bundle exec foreman start" zoo_stats >> $output_file
+        docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bundle exec foreman start" zoo_stats
+        # cat ./testing_results/temp >> $output_file
+        # rm ./testing_results/temp
     else
         docker-compose run -e repeats=$repeats -e database_size=$database_size --rm --entrypoint="bin/rails runner scripts/generate_testing_database/run_database_tests.rb" zoo_stats >> $output_file
     fi

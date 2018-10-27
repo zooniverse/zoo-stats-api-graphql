@@ -1,5 +1,5 @@
 # Zoo stats
-[![Build Status](https://travis-ci.org/AroneyS/zoo_stats_api_prototype.png)](https://travis-ci.org/AroneyS/zoo_stats_api_prototype)
+[![Build Status](https://travis-ci.org/AroneyS/zoo_stats_api_prototype.svg?branch=master)](https://travis-ci.org/AroneyS/zoo_stats_api_prototype)
 
 ### Setup Docker and Docker Compose
 

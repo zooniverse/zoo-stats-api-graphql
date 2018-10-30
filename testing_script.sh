@@ -18,8 +18,9 @@ output_file="./testing_results/test_output-${repeats}-${writes}_writes.csv"
 
 # List of inputs to use
 quick_list=(0 1)
+multi_test=(0 0 0 1 1 1)
 start_list=(0 1 2 9)
-extra_list=(0 1 2 9 11 12)
+extra_list=(0 1 2 9 12)
 all_list=(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 
 echo "***Script setup***"

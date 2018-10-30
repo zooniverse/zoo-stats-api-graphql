@@ -23,7 +23,7 @@ repeat_count.times do
     time_bucket.where(user_id: test_user_id, event_type: "classification").load
     time_bucket.where(user_id: test_user_id, event_type: "comment").load
   end
-  puts "#{database_size},#{time.total.round(5)},#{cold}"
+  puts "#{database_size},#{time.real.round(5)},#{cold}"
   cold = "False"
 end
 

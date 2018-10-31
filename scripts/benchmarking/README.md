@@ -1,9 +1,9 @@
 # Zoo_stats Benchmarking
-------------------------
-### Results
-Database benchmarking performed as below with database sizes of 100K, 200K, 300K, 10M and 100M. Results saved in `./results folder`. `sql_time/` folder contains current results (`real_time/` folder contains tests performed with old ruby Benchmark code) both before and after addition of event_type/user_id and event_type/project_id compound indexes. Numbering is as follows: '-20-': 100K and 200K database size results; '-21-': 100K, 200K, 300K and 10M database size results; '-22-': 100K, 200K, 300K, 10M and 100M database size results. Yes and No refer to use (or not) of two concurrent database writers. 
 
-*Compare `./results/sql_time/no_Indexes/test_output-22-no_writes.png` with `./results/sql_time/with_Indexes/test_output-22-no_writes.png` to see the effects of adding indexes*
+### Results
+Database benchmarking performed as below with database sizes of 100K, 200K, 300K, 10M and 100M. Results saved in `./results folder`. `sql_time/` folder contains current results (`real_time/` folder contains tests performed with old ruby Benchmark code) both before and after addition of event_type/user_id and event_type/project_id compound indexes. Numbering is as follows: "20": 100K and 200K database size results; "21": 100K, 200K, 300K and 10M database size results; "22": 100K, 200K, 300K, 10M and 100M database size results. Yes and No refer to use (or not) of two concurrent database writers. 
+
+__Compare `./results/sql_time/no_Indexes/test_output-22-yes_writes.png` with `./results/sql_time/with_Indexes/test_output-22-yes_writes.png` to see the effects of adding indexes__
 
 ### Generating data files
 1. Generate maximum database size CSV file
@@ -36,11 +36,11 @@ Database benchmarking performed as below with database sizes of 100K, 200K, 300K
     * Stops and starts database to ensure cold startup
     * Runs database tests either of below
 
-0. Test without writers
+Test without writers
     * writes is not 'yes'
     * `run_database_tests.rb` is run and given database_size and number of repeats (see below)
 
-0. Test with concurrent database writers
+Test with concurrent database writers
     * writes is 'yes'
     * Foreman is run (given database_size, temp file and number of repeats as environmental variables)
     * Foreman starts processes listed in Procfile
@@ -48,7 +48,7 @@ Database benchmarking performed as below with database sizes of 100K, 200K, 300K
     * test: run `run_database_tests.rb > $temp_file` (output to temp_file)
     * After test run, temp_file is appended to output_file
 
-0. `run_database_tests.rb`
+`run_database_tests.rb`
     * Gets database_size (only used for CSV output) and repeat_count from arguments or environmental variables
     * Notification subscription setup (need to subscribe to ActiveSupport notifications in order to access the reported SQL load time. This time is printed when using rails/console)
     * Runs tests repeat_count times, first run is cold-run
@@ -58,12 +58,12 @@ Database benchmarking performed as below with database sizes of 100K, 200K, 300K
 
 
 ### Running tests using current database
-1. To save time resetting the database, use `./no_db_refresh_testing_script.sh {Number of repeats} {yes/no}` (yes/no concurrent database writers)
+To save time resetting the database, use `./no_db_refresh_testing_script.sh {Number of repeats} {yes/no}` (yes/no concurrent database writers)
     * Runs as above without Iteration or Database resetting/importing
     * Requires manual addition of previously generated output file (perhaps already including smaller database sizes) and setting of current database size
 
 
 ### Generating graphs
-1. Run `python3 generate_graphs.py`
+Run `python3 generate_graphs.py`
     * Generates line graph for each CSV file in the `./testing_results/` directory
     * Each graph is shown and saved as PNG file

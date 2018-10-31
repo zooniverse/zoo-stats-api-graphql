@@ -1,5 +1,6 @@
 require "benchmark"
 # Change to env variables
+STDOUT.sync = true
 database_size   = ARGV[0]
 unless database_size
   database_size = ENV["database_size"]

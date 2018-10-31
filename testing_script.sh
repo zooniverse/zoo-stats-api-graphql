@@ -3,8 +3,8 @@
 file_array=(input01 input02 input03 input04 input05 input06 input07 input08 input09 input10 input11 input12 input13 input14 input15)
 sizes=(100K 200K 300K 400K 500K 750K 1M 2M 5M 10M 20M 50M 100M 500M 1B)
 sizes_i=(100000 200000 300000 400000 500000 750000 1000000 2000000 5000000 10000000 20000000 50000000 100000000 500000000 1000000000)
-path="/Users/samuelaroney/Data/"
-script_path="./scripts/generate_testing_database/"
+path="{PATH HERE}" # Add path to csv data files
+script_path="./"
 temp_file="./testing_results/temp"
 
 repeats=$1

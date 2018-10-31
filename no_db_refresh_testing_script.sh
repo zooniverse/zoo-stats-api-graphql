@@ -10,11 +10,11 @@ i=12
 # Change above to match index of database size
 # copy start_list run to "{YOUR FILENAME HERE}.csv"
 # type "{YOUR FILENAME HERE}.csv" below"
-filename="test_output-22-yes_writes.csv"
+filename="{YOUR FILENAME HERE}.csv"
 output_file="./testing_results/${filename}"
 
-path="/Users/samuelaroney/Data/"
-script_path="./scripts/generate_testing_database/"
+path="{PATH HERE}" ### Add path to csv data files
+script_path="./"
 temp_file="./testing_results/temp"
 
 repeats=$1

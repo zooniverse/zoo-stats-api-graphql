@@ -37,33 +37,33 @@ __Compare `./results/sql_time/no_Indexes/test_output-22-yes_writes.png` with `./
     * Runs database tests either of below
 
 Test without writers
-    * writes is not 'yes'
-    * `run_database_tests.rb` is run and given database_size and number of repeats (see below)
+* writes is not 'yes'
+* `run_database_tests.rb` is run and given database_size and number of repeats (see below)
 
 Test with concurrent database writers
-    * writes is 'yes'
-    * Foreman is run (given database_size, temp file and number of repeats as environmental variables)
-    * Foreman starts processes listed in Procfile
-    * writer1/2: two independent runs of `generate_events.rb {Starting event_id}` which adds random events using `generator_class.rb` (*__Warning: These generated events are actually inserted into the database__*)
-    * test: run `run_database_tests.rb > $temp_file` (output to temp_file)
-    * After test run, temp_file is appended to output_file
+* writes is 'yes'
+* Foreman is run (given database_size, temp file and number of repeats as environmental variables)
+* Foreman starts processes listed in Procfile
+* writer1/2: two independent runs of `generate_events.rb {Starting event_id}` which adds random events using `generator_class.rb` (*__Warning: These generated events are actually inserted into the database__*)
+* test: run `run_database_tests.rb > $temp_file` (output to temp_file)
+* After test run, temp_file is appended to output_file
 
 `run_database_tests.rb`
-    * Gets database_size (only used for CSV output) and repeat_count from arguments or environmental variables
-    * Notification subscription setup (need to subscribe to ActiveSupport notifications in order to access the reported SQL load time. This time is printed when using rails/console)
-    * Runs tests repeat_count times, first run is cold-run
-    * Uses Timescale time_bucket query for specific random user, both comment and classifications are run separately
-    * Parses recorded notifications for those matching the queries and sums their duration
-    * This data could be split if desired
+* Gets database_size (only used for CSV output) and repeat_count from arguments or environmental variables
+* Notification subscription setup (need to subscribe to ActiveSupport notifications in order to access the reported SQL load time. This time is printed when using rails/console)
+* Runs tests repeat_count times, first run is cold-run
+* Uses Timescale time_bucket query for specific random user, both comment and classifications are run separately
+* Parses recorded notifications for those matching the queries and sums their duration
+* This data could be split if desired
 
 
 ### Running tests using current database
 To save time resetting the database, use `./no_db_refresh_testing_script.sh {Number of repeats} {yes/no}` (yes/no concurrent database writers)
-    * Runs as above without Iteration or Database resetting/importing
-    * Requires manual addition of previously generated output file (perhaps already including smaller database sizes) and setting of current database size
+* Runs as above without Iteration or Database resetting/importing
+* Requires manual addition of previously generated output file (perhaps already including smaller database sizes) and setting of current database size
 
 
 ### Generating graphs
 Run `python3 generate_graphs.py`
-    * Generates line graph for each CSV file in the `./testing_results/` directory
-    * Each graph is shown and saved as PNG file
+* Generates line graph for each CSV file in the `./testing_results/` directory
+* Each graph is shown and saved as PNG file

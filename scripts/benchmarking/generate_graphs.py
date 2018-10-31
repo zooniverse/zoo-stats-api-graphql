@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-directory_in_str = '/Users/samuelaroney/Code/zoo_stats_api_prototype/testing_results/'
+current = os.getcwd()
+directory_in_str = current + '/testing_results/'
 directory = os.fsencode(directory_in_str)
 
 def fx(x):

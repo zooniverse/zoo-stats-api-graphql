@@ -8,9 +8,9 @@
 sizes_i=(100000 200000 300000 400000 500000 750000 1000000 2000000 5000000 10000000 20000000 50000000 100000000 500000000 1000000000)
 i=12
 # Change above to match index of database size
-# copy start_list run to "newfilename.csv"
-# type "newfilename.csv" below"
-filename="test_filename.csv"
+# copy start_list run to "{YOUR FILENAME HERE}.csv"
+# type "{YOUR FILENAME HERE}.csv" below"
+filename="test_output-22-yes_writes.csv"
 output_file="./testing_results/${filename}"
 
 path="/Users/samuelaroney/Data/"

@@ -8,6 +8,6 @@
 
 require_relative '../scripts/seeds/generator_class'
 
-generator_1 = Generator.new(1)
+generator_1 = Generator.new(0)
 
 20.times { generator_1.generate_event }

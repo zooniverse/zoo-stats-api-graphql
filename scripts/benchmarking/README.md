@@ -1,9 +1,9 @@
 # Zoo_stats Benchmarking
 
 ### Results
-Database benchmarking performed as below with database sizes of 100K, 200K, 300K, 10M and 100M. Results saved in `./results folder`. `sql_time/` folder contains current results (`real_time/` folder contains tests performed with old ruby Benchmark code) both before and after addition of event_type/user_id and event_type/project_id compound indexes. Numbering is as follows: "20": 100K and 200K database size results; "21": 100K, 200K, 300K and 10M database size results; "22": 100K, 200K, 300K, 10M and 100M database size results. Yes and No refer to use (or not) of two concurrent database writers. 
+Database benchmarking performed as below with database sizes of 100K, 200K, 300K, 10M and 100M. Results saved in `./results folder` both before and after addition of event_type/user_id and event_type/project_id compound indexes. Numbering is as follows: "20": 100K and 200K database size results; "21": 100K, 200K, 300K and 10M database size results; "22": 100K, 200K, 300K, 10M and 100M database size results. Yes and No refer to use (or not) of two concurrent database writers. 
 
-__Compare `./results/sql_time/no_Indexes/test_output-22-yes_writes.png` with `./results/sql_time/with_Indexes/test_output-22-yes_writes.png` to see the effects of adding indexes__
+__Compare `./results/no_Indexes/test_output-22-yes_writes.png` with `./results/with_Indexes/test_output-22-yes_writes.png` to see the effects of adding indexes__
 
 ### Generating data files
 1. Generate maximum database size CSV file
@@ -37,7 +37,7 @@ __Compare `./results/sql_time/no_Indexes/test_output-22-yes_writes.png` with `./
     * Runs database tests either of below
 
 Test without writers
-* writes is not 'yes'
+* writes is 'no'
 * `run_database_tests.rb` is run and given database_size and number of repeats (see below)
 
 Test with concurrent database writers

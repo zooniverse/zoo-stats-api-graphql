@@ -44,7 +44,7 @@ Test with concurrent database writers
 * writes is 'yes'
 * Foreman is run (given database_size, temp file and number of repeats as environmental variables)
 * Foreman starts processes listed in Procfile
-* writer1/2: two independent runs of `generate_events.rb {Starting event_id}` which adds random events using `generator_class.rb` (*__Warning: These generated events are actually inserted into the database__*)
+* writer1/2: two independent runs of `generate_events.rb {Starting event_id}` which adds random events using `../seeds/generator_class.rb` (*__Warning: These generated events are actually inserted into the database__*)
 * test: run `run_database_tests.rb > $temp_file` (output to temp_file)
 * After test run, temp_file is appended to output_file
 

@@ -1,4 +1,4 @@
-require_relative 'generator_class'
+require_relative '../seeds/generator_class'
 
 generator_1 = Generator.new(ARGV[0])
 

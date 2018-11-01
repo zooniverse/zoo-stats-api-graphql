@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-require_relative '../scripts/benchmarking/generator_class'
+require_relative '../scripts/seeds/generator_class'
 
 generator_1 = Generator.new(1)
 

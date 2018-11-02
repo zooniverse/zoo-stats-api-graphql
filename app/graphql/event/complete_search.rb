@@ -1,6 +1,6 @@
 module Searchers
   class Complete
-    def self.search(kwargs)
+    def search(kwargs)
       Event.where(**kwargs)
     end
   end

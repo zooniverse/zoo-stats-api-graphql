@@ -10,7 +10,7 @@ module Types
     end
 
     def user_id_query(kwargs, searcher=Searchers::Complete)
-      searcher.search(**kwargs)
+      searcher.new.search(**kwargs)
     end
 
     field :project_id_query, [Types::EventType], null: false do
@@ -19,7 +19,7 @@ module Types
     end
 
     def project_id_query(kwargs, searcher=Searchers::Complete)
-      searcher.search(**kwargs)
+      searcher.new.search(**kwargs)
     end
   end
 end

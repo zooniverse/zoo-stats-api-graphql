@@ -1,4 +1,4 @@
-require_relative "../event/complete_search.rb"
+require_relative "../utilities/searchers.rb"
 
 module Types
   class QueryType < Types::BaseObject

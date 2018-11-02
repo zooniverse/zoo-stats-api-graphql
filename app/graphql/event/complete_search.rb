@@ -1,5 +1,5 @@
 module Searchers
-  class CompleteSearch
+  class Complete
     def self.search(kwargs)
       Event.where(**kwargs)
     end

@@ -9,7 +9,7 @@ module Types
       argument :userId, ID, required: true
     end
 
-    def user_id_query(kwargs, searcher=Event::CompleteSearch)
+    def user_id_query(kwargs, searcher=Searchers::CompleteSearch)
       searcher.search(**kwargs)
     end
 
@@ -18,7 +18,7 @@ module Types
       argument :project_id, ID, required: true
     end
 
-    def project_id_query(kwargs, searcher=Event::CompleteSearch)
+    def project_id_query(kwargs, searcher=Searchers::CompleteSearch)
       searcher.search(**kwargs)
     end
   end

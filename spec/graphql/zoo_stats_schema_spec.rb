@@ -1,108 +1,87 @@
-RSpec.describe Types::QueryType do
-  subject(:query_type) { Types::QueryType }
-  let(:context) { {} }
-  let(:variables) { {} }
-  # Call `result` to execute the query
-  let(:result) {
-    res = ZooStatsSchema.execute(
-      query_string,
-      context: context,
-      variables: variables
-    )
-    # Print any errors
-    if res["errors"]
-      pp res
+RSpec.describe ZooStatsSchema do
+  shared_examples 'a graphQL query' do |query_name, query_string, output|
+    let(:context) { {} }
+    let(:variables) { {} }
+    # Call `result` to execute the query
+    let(:result) {
+      res = ZooStatsSchema.execute(
+        query_string,
+        context: context,
+        variables: variables
+      )
+      # Print any errors
+      if res["errors"]
+        pp res
+      end
+      res
+    }
+    let(:query_string) { query_string }
+    let(:base_attributes) do
+      {
+        event_id:   1
+      }
     end
-    res
-  }
+    let(:attributes_type_0) do
+      base_attributes.merge({
+        user_id:    111,
+        project_id: 222
+      })
+    end
+    let(:attributes_type_1) do
+      base_attributes.merge({
+        user_id:    123,
+        project_id: 456,
+      })
+    end
+    let!(:events_type_0) { create_list(:event, 3, **attributes_type_0) }
 
-  describe 'querying all events for a specific :userId' do
-    let(:users_id) { 123 }
-    let(:query_string) do
-      "{
-        userIdQuery(userId: #{users_id}){
-          eventId
-          eventTime
-          userId
-        }
-      }"
-    end
-      
-    let!(:non_user_events) { create_list(:event, 3) }
-    context 'when there are no events by that user' do
+    context 'when there are no matching events' do
       it 'returns no events' do
-        expect(result["data"]).not_to be_nil
-        expect(result["data"]["userIdQuery"]).to be_empty
+        result_data = result["data"]
+        expect(result_data).not_to be_nil
+        expect(result_data[query_name]).to be_empty
       end
     end
-    
-    context 'when there are events by that user' do
-      let!(:events) { create_list(:event, 3, user_id: users_id) }
-      it 'returns the expected events only' do
-        expect(result["data"]).not_to be_nil
-        data = result["data"]["userIdQuery"]
-        expect(data.uniq.count).to eq(events.count)
 
-        eventIds = []
-        eventTimes = []
-        userIds = []
-        data.each do |item|
-          eventIds.append(item["eventId"])
-          eventTimes.append(item["eventTime"])
-          userIds.append(item["userId"])
-        end
-
-        events.each do |event|
-          expect(eventIds).to include(event.event_id.to_s)
-          expect(eventTimes).to include(event.event_time.iso8601)
-          expect(userIds).to include(event.user_id.to_s)
-        end
+    context 'when there are matching events' do
+      let!(:events_type_1) { create_list(:event, 3, **attributes_type_1) }
+      it 'returns correct events' do
+        expect(result["data"][query_name]).to eq(output)
       end
     end
   end
 
-  describe 'querying all events for a specific :projectId' do
-    let(:projects_id) { 456 }
-    let(:query_string) do
-      "{
-        projectIdQuery(projectId: #{projects_id}){
+  describe 'userIdQuery' do
+    query_name = 'userIdQuery'
+    users_id = 123
+    query_string = "{
+        userIdQuery(userId: #{users_id}){
           eventId
-          eventTime
-          projectId
+          userId
         }
-      }"
-    end
-      
-    let!(:non_project_events) { create_list(:event, 3) }
-    context 'when there are no events from that project' do
-      it 'returns no events' do
-        expect(result["data"]).not_to be_nil
-        expect(result["data"]["projectIdQuery"]).to be_empty
-      end
-    end
-    
-    context 'when there are events from that project' do
-      let!(:events) { create_list(:event, 3, project_id: projects_id) }
-      it 'returns the expected events only' do
-        expect(result["data"]).not_to be_nil
-        data = result["data"]["projectIdQuery"]
-        expect(data.uniq.count).to eq(events.count)
+    }"
+    output = [
+      {"eventId"=>"1", "userId"=>"123"},
+      {"eventId"=>"1", "userId"=>"123"},
+      {"eventId"=>"1", "userId"=>"123"}
+    ]
+    it_behaves_like 'a graphQL query', query_name, query_string, output
+  end
 
-        eventIds = []
-        eventTimes = []
-        projectIds = []
-        data.each do |item|
-          eventIds.append(item["eventId"])
-          eventTimes.append(item["eventTime"])
-          projectIds.append(item["projectId"])
-        end
-
-        events.each do |event|
-          expect(eventIds).to include(event.event_id.to_s)
-          expect(eventTimes).to include(event.event_time.iso8601)
-          expect(projectIds).to include(event.project_id.to_s)
-        end
-      end
-    end
+  describe 'projectIdQuery' do
+    query_name = 'projectIdQuery'
+    projects_id = 456
+    query_string = "{
+      projectIdQuery(projectId: #{projects_id}){
+        eventId
+        projectId
+      }
+    }"
+    output = [
+      {"eventId"=>"1", "projectId"=>"456"},
+      {"eventId"=>"1", "projectId"=>"456"},
+      {"eventId"=>"1", "projectId"=>"456"}
+    ]
+    it_behaves_like 'a graphQL query', query_name, query_string, output
   end
 end

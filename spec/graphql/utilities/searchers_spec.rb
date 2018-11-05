@@ -1,5 +1,3 @@
-require_relative "../../../app/graphql/utilities/searchers.rb"
-
 RSpec.describe Searchers do
   subject(:complete_searcher) { Searchers::Complete.new }
 

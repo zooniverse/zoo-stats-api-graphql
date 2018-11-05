@@ -10,7 +10,7 @@ RSpec.describe Types::QueryType do
     }]
   }.each do |field_name, expected_results|
     (expected_field_type, expected_arguments) = expected_results
-    it '' do
+    it 'matches field descriptions' do
       field_info = subject.fields[field_name]
       expect(field_info.type.to_type_signature).to eq(expected_field_type)
       expect(field_info.description).not_to be_nil

@@ -1,5 +1,4 @@
-RSpec.describe ZooStatsSchema do
-  shared_examples 'a graphQL query' do |query_name, query_string, output|
+RSpec.shared_examples 'a graphQL query' do |query_name, query_string, output|
     let(:context) { {} }
     let(:variables) { {} }
     # Call `result` to execute the query
@@ -51,19 +50,19 @@ RSpec.describe ZooStatsSchema do
     end
   end
 
+Rspec.describe ZooStatsSchema do
   describe 'userIdQuery' do
     query_name = 'userIdQuery'
     users_id = 123
     query_string = "{
         userIdQuery(userId: #{users_id}){
-          eventId
           userId
         }
     }"
     output = [
-      {"eventId"=>"1", "userId"=>"123"},
-      {"eventId"=>"1", "userId"=>"123"},
-      {"eventId"=>"1", "userId"=>"123"}
+      {"userId"=>"123"},
+      {"userId"=>"123"},
+      {"userId"=>"123"}
     ]
     it_behaves_like 'a graphQL query', query_name, query_string, output
   end
@@ -73,14 +72,13 @@ RSpec.describe ZooStatsSchema do
     projects_id = 456
     query_string = "{
       projectIdQuery(projectId: #{projects_id}){
-        eventId
         projectId
       }
     }"
     output = [
-      {"eventId"=>"1", "projectId"=>"456"},
-      {"eventId"=>"1", "projectId"=>"456"},
-      {"eventId"=>"1", "projectId"=>"456"}
+      {"projectId"=>"456"},
+      {"projectId"=>"456"},
+      {"projectId"=>"456"}
     ]
     it_behaves_like 'a graphQL query', query_name, query_string, output
   end

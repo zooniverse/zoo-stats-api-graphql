@@ -1,6 +1,7 @@
 RSpec.describe Types::EventType do
   subject { Types::EventType }
 
+  # 'fieldName'          => 'Field_type'
   { 
     # event specific fields
     'eventId'            => 'ID!',

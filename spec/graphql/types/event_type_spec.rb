@@ -36,6 +36,10 @@ RSpec.describe Types::EventType do
     'body'               => 'String',
     'url'                => 'String',
     'tags'               => 'String',
+
+    # output fields
+    'bucket'             => 'ISO8601DateTime',
+    'count'              => 'Int',
   }.each do |field_name, expected_field_type|
     it '' do
       field_info = subject.fields[field_name]

@@ -9,6 +9,11 @@ RSpec.describe Types::QueryType do
     }],
     'projectIdQuery'    => ['[Event!]!', {
       'projectId'       => 'ID!'
+    }],
+    'userBucketQuery'   => ['[Event!]!', {
+      'userId'          => 'ID!',
+      'eventType'       => 'String!',
+      'timeBucket'      => 'String!'
     }]
   }.each do |field_name, expected_results|
     (expected_field_type, expected_arguments) = expected_results

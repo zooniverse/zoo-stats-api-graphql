@@ -60,5 +60,11 @@ module Types
     description: "Url for comment"
     field :tags, String, null: true,
     description: "Comment tags"
+
+    # output fields
+    field :bucket, GraphQL::Types::ISO8601DateTime, null: true,
+    description: "BucketQuery output time slot"
+    field :count, Int, null: true,
+    description: "BucketQuery output event count"
   end
 end

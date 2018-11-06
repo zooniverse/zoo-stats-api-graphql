@@ -112,4 +112,22 @@ Rspec.describe ZooStatsSchema do
     ]
     it_behaves_like 'a graphQL query', query_name, query_string, output
   end
+
+  describe 'projectBucketQuery' do
+    query_name = 'projectBucketQuery'
+    project_id= 456
+    event_type = 'classification'
+    time_bucket = '1 day'
+    query_string = "{
+      projectBucketQuery(projectId: #{project_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
+        bucket,
+        count
+      }
+    }"
+    output = [
+      {"bucket"=>"2018-11-06T00:00:00Z", "count"=>1},
+      {"bucket"=>"2018-11-08T00:00:00Z", "count"=>2}
+    ]
+    it_behaves_like 'a graphQL query', query_name, query_string, output
+  end
 end

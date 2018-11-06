@@ -1,19 +1,24 @@
 RSpec.describe Types::QueryType do
   subject { Types::QueryType }
 
-  # 'queryName'         => 'Output_type', {
-  #   'argumentName'    => 'Argument_type' }
+  # 'queryName'           => 'Output_type', {
+  #   'argumentName'      => 'Argument_type' }
   {
-    'userIdQuery'       => ['[Event!]!', {
-      'userId'          => 'ID!'
+    'userIdQuery'         => ['[Event!]!', {
+      'userId'            => 'ID!'
     }],
-    'projectIdQuery'    => ['[Event!]!', {
-      'projectId'       => 'ID!'
+    'projectIdQuery'      => ['[Event!]!', {
+      'projectId'         => 'ID!'
     }],
-    'userBucketQuery'   => ['[Event!]!', {
-      'userId'          => 'ID!',
-      'eventType'       => 'String!',
-      'timeBucket'      => 'String!'
+    'userBucketQuery'     => ['[Event!]!', {
+      'userId'            => 'ID!',
+      'eventType'         => 'String!',
+      'timeBucket'        => 'String!'
+    }],
+    'projectBucketQuery'  => ['[Event!]!', {
+      'projectId'            => 'ID!',
+      'eventType'         => 'String!',
+      'timeBucket'        => 'String!'
     }]
   }.each do |field_name, expected_results|
     (expected_field_type, expected_arguments) = expected_results

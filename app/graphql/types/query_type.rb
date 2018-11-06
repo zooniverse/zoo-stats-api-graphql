@@ -32,5 +32,16 @@ module Types
     def user_bucket_query(kwargs, searcher=Searchers::Bucket)
       searcher.new.search(**kwargs)
     end
+
+    field :project_bucket_query, [Types::EventType], null: false do
+      description 'returns bucketed counts of events by project in category'
+      argument :project_id, ID, required: true
+      argument :event_type, String, required: true
+      argument :time_bucket, String, required: true
+    end
+
+    def project_bucket_query(kwargs, searcher=Searchers::Bucket)
+      searcher.new.search(**kwargs)
+    end
   end
 end

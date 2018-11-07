@@ -23,10 +23,10 @@ module Types
     end
 
     field :user_stats_count, [Types::EventType], null: false do
-      description 'returns bucketed counts of events by user in category'
+      description 'returns counts of events by user in category grouped into period with length of interval (i.e. "1 day")'
       argument :user_id, ID, required: true
       argument :event_type, String, required: true
-      argument :time_bucket, String, required: true
+      argument :interval, String, required: true
     end
 
     def user_stats_count(kwargs, searcher=Searchers::Bucket)
@@ -34,10 +34,10 @@ module Types
     end
 
     field :project_stats_count, [Types::EventType], null: false do
-      description 'returns bucketed counts of events by project in category'
+      description 'returns counts of events by project in category grouped into period with length of interval (i.e. "1 day")'
       argument :project_id, ID, required: true
       argument :event_type, String, required: true
-      argument :time_bucket, String, required: true
+      argument :interval, String, required: true
     end
 
     def project_stats_count(kwargs, searcher=Searchers::Bucket)

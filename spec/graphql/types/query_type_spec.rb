@@ -13,12 +13,12 @@ RSpec.describe Types::QueryType do
     'userStatsCount'     => ['[Event!]!', {
       'userId'            => 'ID!',
       'eventType'         => 'String!',
-      'timeBucket'        => 'String!'
+      'interval'        => 'String!'
     }],
     'projectStatsCount'  => ['[Event!]!', {
       'projectId'            => 'ID!',
       'eventType'         => 'String!',
-      'timeBucket'        => 'String!'
+      'interval'        => 'String!'
     }]
   }.each do |field_name, expected_results|
     (expected_field_type, expected_arguments) = expected_results

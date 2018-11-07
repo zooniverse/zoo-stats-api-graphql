@@ -101,7 +101,7 @@ Rspec.describe ZooStatsSchema do
     event_type = 'classification'
     time_bucket = '1 day'
     query_string = "{
-      userStatsCount(userId: #{user_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
+      userStatsCount(userId: #{user_id}, eventType: \"#{event_type}\", interval: \"#{time_bucket}\"){
         period,
         count
       }
@@ -119,7 +119,7 @@ Rspec.describe ZooStatsSchema do
     event_type = 'classification'
     time_bucket = '1 day'
     query_string = "{
-      projectStatsCount(projectId: #{project_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
+      projectStatsCount(projectId: #{project_id}, eventType: \"#{event_type}\", interval: \"#{time_bucket}\"){
         period,
         count
       }

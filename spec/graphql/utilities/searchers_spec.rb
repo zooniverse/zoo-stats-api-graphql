@@ -30,7 +30,7 @@ RSpec.describe Searchers do
     let(:time_bucket) { '1 day' }
     let(:arguments) do
       {
-        time_bucket:    time_bucket,
+        interval:    time_bucket,
         user_id:        users_id,
         event_type:     event_types
       }

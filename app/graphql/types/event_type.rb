@@ -62,9 +62,9 @@ module Types
     description: "Comment tags"
 
     # output fields
-    field :bucket, GraphQL::Types::ISO8601DateTime, null: true,
-    description: "BucketQuery output time slot"
+    field :period, GraphQL::Types::ISO8601DateTime, null: true,
+    description: "Output time slot"
     field :count, Int, null: true,
-    description: "BucketQuery output event count"
+    description: "Output event count"
   end
 end

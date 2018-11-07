@@ -57,15 +57,15 @@ RSpec.describe Searchers do
       it 'returns the expected buckets' do
         expected = [
           {
-            "bucket"  => start_time.midnight,
+            "period"  => start_time.midnight,
             "count"   => 1
           },
           {
-            "bucket"  => mid_time.midnight,
+            "period"  => mid_time.midnight,
             "count"   => 2
           },
           {
-            "bucket"  => end_time.midnight,
+            "period"  => end_time.midnight,
             "count"   => 3
           }
         ]

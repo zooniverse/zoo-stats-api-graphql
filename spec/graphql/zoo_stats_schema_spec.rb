@@ -102,13 +102,13 @@ Rspec.describe ZooStatsSchema do
     time_bucket = '1 day'
     query_string = "{
       userBucketQuery(userId: #{user_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
-        bucket,
+        period,
         count
       }
     }"
     output = [
-      {"bucket"=>"2018-11-06T00:00:00Z", "count"=>1},
-      {"bucket"=>"2018-11-08T00:00:00Z", "count"=>2}
+      {"period"=>"2018-11-06T00:00:00Z", "count"=>1},
+      {"period"=>"2018-11-08T00:00:00Z", "count"=>2}
     ]
     it_behaves_like 'a graphQL query', query_name, query_string, output
   end
@@ -120,13 +120,13 @@ Rspec.describe ZooStatsSchema do
     time_bucket = '1 day'
     query_string = "{
       projectBucketQuery(projectId: #{project_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
-        bucket,
+        period,
         count
       }
     }"
     output = [
-      {"bucket"=>"2018-11-06T00:00:00Z", "count"=>1},
-      {"bucket"=>"2018-11-08T00:00:00Z", "count"=>2}
+      {"period"=>"2018-11-06T00:00:00Z", "count"=>1},
+      {"period"=>"2018-11-08T00:00:00Z", "count"=>2}
     ]
     it_behaves_like 'a graphQL query', query_name, query_string, output
   end

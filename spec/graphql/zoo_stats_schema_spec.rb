@@ -95,13 +95,13 @@ Rspec.describe ZooStatsSchema do
       it_behaves_like 'a graphQL query', query_name, query_string, output
   end
       
-  describe 'userBucketQuery' do
-    query_name = 'userBucketQuery'
+  describe 'userStatsCount' do
+    query_name = 'userStatsCount'
     user_id = 123
     event_type = 'classification'
     time_bucket = '1 day'
     query_string = "{
-      userBucketQuery(userId: #{user_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
+      userStatsCount(userId: #{user_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
         period,
         count
       }
@@ -113,13 +113,13 @@ Rspec.describe ZooStatsSchema do
     it_behaves_like 'a graphQL query', query_name, query_string, output
   end
 
-  describe 'projectBucketQuery' do
-    query_name = 'projectBucketQuery'
+  describe 'projectStatsCount' do
+    query_name = 'projectStatsCount'
     project_id= 456
     event_type = 'classification'
     time_bucket = '1 day'
     query_string = "{
-      projectBucketQuery(projectId: #{project_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
+      projectStatsCount(projectId: #{project_id}, eventType: \"#{event_type}\", timeBucket: \"#{time_bucket}\"){
         period,
         count
       }

@@ -10,12 +10,12 @@ RSpec.describe Types::QueryType do
     'projectIdQuery'      => ['[Event!]!', {
       'projectId'         => 'ID!'
     }],
-    'userBucketQuery'     => ['[Event!]!', {
+    'userStatsCount'     => ['[Event!]!', {
       'userId'            => 'ID!',
       'eventType'         => 'String!',
       'timeBucket'        => 'String!'
     }],
-    'projectBucketQuery'  => ['[Event!]!', {
+    'projectStatsCount'  => ['[Event!]!', {
       'projectId'            => 'ID!',
       'eventType'         => 'String!',
       'timeBucket'        => 'String!'

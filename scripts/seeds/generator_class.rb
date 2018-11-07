@@ -57,13 +57,15 @@ class Generator
       tags = nil
     end
 
+    time_stamp = Time.zone.parse('2018-09-23 05:45:09') + self.event_id.hours - rand(1..10).hours
+
     Event.create(
       {
         'event_id':             self.event_id += 1,
         'event_type':           event_type,
         'event_source':         "Panoptes",
-        'event_time':           Time.now,
-        'event_created_at':     Time.now,
+        'event_time':           time_stamp,
+        'event_created_at':     time_stamp,
         'project_id':           rand(1..PROJECT_ID_MAX),
         'workflow_id':          rand(1..WORKFLOW_ID_MAX),
         'user_id':              user_id_options[rand(0..NIL_USER_TO_LOGGED_IN_RATIO)],
@@ -85,8 +87,8 @@ class Generator
         'tags':                 tags,
         'user_zooniverse_id':   nil,
         'zooniverse_id':        nil,
-        'created_at':           Time.now,
-        'updated_at':           Time.now,
+        'created_at':           time_stamp,
+        'updated_at':           time_stamp,
       }
     )
   end

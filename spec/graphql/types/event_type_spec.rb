@@ -36,8 +36,12 @@ RSpec.describe Types::EventType do
     'body'               => 'String',
     'url'                => 'String',
     'tags'               => 'String',
+
+    # output fields
+    'period'             => 'ISO8601DateTime',
+    'count'              => 'Int',
   }.each do |field_name, expected_field_type|
-    it '' do
+    it "has matching field: #{field_name}" do
       field_info = subject.fields[field_name]
       expect(field_info.type.to_type_signature).to eq(expected_field_type)
       expect(field_info.description).not_to be_nil

@@ -12,7 +12,7 @@ before_install:
   - docker ps
 
   # setup testing environment
-  - docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle install --without development production" zoo_stats
+  - docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle install --with=test" zoo_stats
   - docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle exec rake db:setup" zoo_stats
 
 script:

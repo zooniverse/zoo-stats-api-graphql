@@ -3,7 +3,6 @@ rvm:
   - 2.5.1
 cache: bundler
 sudo: false
-bundler_args: --with test
 services:
   - docker
 
@@ -13,6 +12,7 @@ before_install:
   - docker ps
 
   # setup testing db
+  - docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle install" zoo_stats
   - docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rake db:setup" zoo_stats
 
 script:

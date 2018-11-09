@@ -1,5 +1,5 @@
 # Zoo stats
-[![Build Status](https://travis-ci.org/zooniverse/zoo_stats_api_prototype.svg?branch=master)](https://travis-ci.org/zooniverse/zoo_stats_api_prototype)
+[![Build Status](https://travis-ci.org/zooniverse/zoo_stats_api_graphql.svg?branch=master)](https://travis-ci.org/zooniverse/zoo_stats_api_graphql)
 
 ### Setup Docker and Docker Compose
 
@@ -12,7 +12,7 @@
 
 #### Usage
 
-1. Clone the repository `git clone https://github.com/zooniverse/zoo_stats_api_prototype`.
+1. Clone the repository `git clone https://github.com/zooniverse/zoo_stats_api_graphql`.
 
 0. Install Docker from the appropriate link above.
 

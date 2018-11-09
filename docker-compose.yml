@@ -14,7 +14,7 @@ gem_cache:
     - /gem_cache
 
 zoo_stats:
-  dockerfile: Dockerfile
+  dockerfile: Dockerfile.dev
   build: ./
   volumes:
     - ./:/rails_app

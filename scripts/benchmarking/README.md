@@ -20,6 +20,12 @@ __Compare `./results/no_Indexes/test_output-22-yes_writes.png` with `./results/w
     * Currently setup as above (each file contains difference between it and the previous file)
     * Run `./writing_script.sh` (*__Warning: Ensure free storage space equal to original file__*)
 
+0. Add below to timescale in docker-compose.yml, where {PATH_TO_DATA} contains the above generated data
+```
+volumes:
+  - {PATH_TO_DATA}:/mnt/
+```
+
 
 ### Running tests (Setup for Independent test files)
 1. Edit testing_script.sh `file_array=`, `sizes=`, `sizes_i=` (data file names and sizes) and `path=` (path to data files)

@@ -10,7 +10,11 @@ module Types
     end
 
     def user_id_query(kwargs, searcher=Searchers::Complete)
-      searcher.new.search(**kwargs)
+      if context[:current_user].to_i == kwargs[:user_id].to_i
+        searcher.new.search(**kwargs)
+      else
+        raise GraphQL::ExecutionError, "Permission denied"
+      end
     end
 
     field :project_id_query, [Types::EventType], null: false do
@@ -30,7 +34,11 @@ module Types
     end
 
     def user_stats_count(kwargs, searcher=Searchers::Bucket)
-      searcher.new.search(**kwargs)
+      if context[:current_user].to_i == kwargs[:user_id].to_i
+        searcher.new.search(**kwargs)
+      else
+        raise GraphQL::ExecutionError, "Permission denied"
+      end
     end
 
     field :project_stats_count, [Types::EventType], null: false do

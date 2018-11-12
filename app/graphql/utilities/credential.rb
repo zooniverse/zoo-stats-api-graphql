@@ -8,6 +8,10 @@ class Credential
     @token = token
   end
 
+  def current_user_id
+    jwt_payload['id'] if ok?
+  end
+
   def ok?
     logged_in? && !expired?
   end

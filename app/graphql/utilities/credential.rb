@@ -2,8 +2,6 @@ require 'panoptes-client'
 
 # Wrapper around the authentication token given by API consumers.
 class Credential
-  OWNER_ROLES = %w[owner collaborator].freeze
-
   attr_reader :token
 
   def initialize(token)

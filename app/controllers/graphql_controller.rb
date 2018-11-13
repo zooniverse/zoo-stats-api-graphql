@@ -5,7 +5,10 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    context = { current_user: current_user }
+    context = {
+      current_user: current_user,
+      admin: admin_status
+    }
     result = ZooStatsSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   rescue => e
@@ -19,6 +22,13 @@ class GraphqlController < ApplicationController
 
     return unless credential
     credential.current_user_id
+  end
+
+  def admin_status
+    credential = setup_credentials
+
+    return unless credential
+    credential.current_admin_status
   end
 
   def setup_credentials

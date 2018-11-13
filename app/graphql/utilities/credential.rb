@@ -12,6 +12,10 @@ class Credential
     jwt_payload['id'] if ok?
   end
 
+  def current_admin_status
+    jwt_payload['admin'] if ok?
+  end
+
   def ok?
     logged_in? && !expired?
   end

@@ -1,5 +1,5 @@
 # Zoo stats
-[![Build Status](https://travis-ci.org/zooniverse/zoo_stats_api_graphql.svg?branch=master)](https://travis-ci.org/zooniverse/zoo_stats_api_graphql)
+[![Build Status](https://travis-ci.org/zooniverse/zoo-stats-api-graphql.svg?branch=master)](https://travis-ci.org/zooniverse/zoo-stats-api-graphql)
 
 ### Setup Docker and Docker Compose
 

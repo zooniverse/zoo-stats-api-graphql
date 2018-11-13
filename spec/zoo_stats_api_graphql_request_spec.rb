@@ -39,6 +39,7 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
         let(:current_user) { 123 }
         let(:admin_status) { false }
         before do
+          expect(credential).to receive(:ok?).and_return(true)
           expect(credential).to receive(:current_user_id).and_return(current_user)
           expect(credential).to receive(:current_admin_status).and_return(admin_status)
         end

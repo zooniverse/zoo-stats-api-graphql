@@ -1,6 +1,9 @@
 require_relative '../graphql/utilities/credential'
 
 class GraphqlController < ApplicationController
+  attr_reader :credential
+  before_action :setup_and_validate_credential
+
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
@@ -18,26 +21,21 @@ class GraphqlController < ApplicationController
 
   private
   def current_user
-    credential = setup_credentials
-
-    return unless credential
-    credential.current_user_id
+    credential.current_user_id if credential
   end
 
   def admin_status
-    credential = setup_credentials
-
-    return unless credential
-    credential.current_admin_status
+    credential.current_admin_status if credential
   end
 
-  def setup_credentials
+  def setup_and_validate_credential
     authorization = request.headers['HTTP_AUTHORIZATION']
     match = /\ABearer (.*)\Z/.match(authorization)
 
     return unless match
     auth = match[1]
-    Credential.new(auth)
+    temp = Credential.new(auth)
+    @credential = temp if temp.ok?
   end
 
   # Handle form data, JSON body, or a blank value

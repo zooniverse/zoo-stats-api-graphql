@@ -9,11 +9,11 @@ class Credential
   end
 
   def current_user_id
-    jwt_payload['id'] if ok?
+    jwt_payload['id']
   end
 
   def current_admin_status
-    jwt_payload['admin'] if ok?
+    jwt_payload['admin']
   end
 
   def ok?

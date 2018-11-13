@@ -25,6 +25,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'graphql', '~> 1.7', '>= 1.7.14'
 gem 'composite_primary_keys', '~> 11.0'
 gem 'dotenv-rails'
+gem 'rollbar'
 gem 'panoptes-client', '~> 0.3.7'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible

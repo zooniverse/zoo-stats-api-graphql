@@ -100,6 +100,13 @@ Rspec.shared_examples 'an authorizing user query' do |query_name, query_string, 
       expect(output["errors"].first["message"]).to eq("Permission denied")
     end
   end
+
+  context 'when the queried :user_id is an :admin' do
+    let(:context) { {admin: true} }
+    it 'returns correct events' do
+      expect(result["data"][query_name]).not_to be_empty
+    end
+  end
   
   context 'when the queried :user_id is :current_user' do
     let(:context) { {current_user: current_user} }

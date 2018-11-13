@@ -3,7 +3,7 @@
 node {
     checkout scm
 
-    def dockerRepoName = 'zooniverse/zoo-event-stats-postgres'
+    def dockerRepoName = 'zooniverse/zoo-stats-api-graphql'
     def dockerImageName = "${dockerRepoName}:${BRANCH_NAME}"
     def newImage = null
 

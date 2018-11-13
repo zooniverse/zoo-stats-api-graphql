@@ -55,7 +55,7 @@ module Types
     private
 
     def user_permission?(query_id)
-      context[:admin] || context[:current_user].to_i == query_id.to_i
+      context[:admin] || context[:current_user].to_s == query_id
     end
   end
 end

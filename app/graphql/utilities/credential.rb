@@ -42,7 +42,7 @@ class Credential
   end
 
   def panoptes_client_env
-    ENV["RACK_ENV"]
+    ENV["RAILS_ENV"]
   end
 
   def expires_at

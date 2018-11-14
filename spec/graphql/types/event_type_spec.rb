@@ -8,11 +8,11 @@ RSpec.describe Types::EventType do
     'eventTime'          => 'ISO8601DateTime!',
     'eventCreatedAt'     => 'ISO8601DateTime',
     'eventSource'        => 'String!',
-    'sessionTime'       => 'ISO8601DateTime',
+    'sessionTime'        => 'Float',
     'userId'             => 'ID',
     'projectId'          => 'ID',
     'workflowId'         => 'ID',
-    'typeSpecificData' => 'String',
+    'eventData'          => 'String',
 
     # output fields
     'period'             => 'ISO8601DateTime',

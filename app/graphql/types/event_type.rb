@@ -12,7 +12,7 @@ module Types
     description: "Time database entry created"
     field :event_source, String, null: false,
     description: "Source of event"
-    field :session_time, GraphQL::Types::ISO8601DateTime, null: true,
+    field :session_time, Float, null: true,
     description: "Elapsed time for the event"
     field :user_id, ID, null: true,
     description: "User ID"
@@ -20,7 +20,7 @@ module Types
     description: "Project ID"
     field :workflow_id, ID, null: true,
     description: "Workflow ID under project"
-    field :type_specific_data, String, null: true,
+    field :event_data, String, null: true,
     description: "Extra event metadata"
 
     # output fields

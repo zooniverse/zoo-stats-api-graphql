@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_30_101442) do
+ActiveRecord::Schema.define(version: 2018_11_14_141854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,26 +25,10 @@ ActiveRecord::Schema.define(version: 2018_10_30_101442) do
     t.bigint "project_id"
     t.bigint "workflow_id"
     t.bigint "user_id"
-    t.string "subject_ids", default: [], array: true
-    t.string "subject_urls", default: [], array: true
-    t.string "lang"
-    t.string "user_agent"
-    t.string "user_name"
-    t.string "project_name"
-    t.bigint "board_id"
-    t.bigint "discussion_id"
-    t.bigint "focus_id"
-    t.string "focus_type"
-    t.string "section"
-    t.text "body"
-    t.string "url"
-    t.string "focus"
-    t.string "board"
-    t.string "tags", default: [], array: true
-    t.bigint "user_zooniverse_id"
-    t.bigint "zooniverse_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type_specific_data"
+    t.datetime "session_time"
     t.index ["event_time"], name: "events_event_time_idx", order: :desc
     t.index ["event_type", "project_id"], name: "index_events_on_event_type_and_project_id"
     t.index ["event_type", "user_id"], name: "index_events_on_event_type_and_user_id"

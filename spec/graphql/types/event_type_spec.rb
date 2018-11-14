@@ -3,39 +3,16 @@ RSpec.describe Types::EventType do
 
   # 'fieldName'          => 'Field_type'
   { 
-    # event specific fields
     'eventId'            => 'ID!',
     'eventType'          => 'String',
     'eventTime'          => 'ISO8601DateTime!',
     'eventCreatedAt'     => 'ISO8601DateTime',
     'eventSource'        => 'String!',
-  
-    # user fields
+    'sessionTime'       => 'ISO8601DateTime',
     'userId'             => 'ID',
-    'userZooniverseId'   => 'ID',
-    'zooniverseId'       => 'ID',
-    'lang'               => 'String',
-    'userAgent'          => 'String',
-    'userName'           => 'String',
-  
-    # project fields
     'projectId'          => 'ID',
-    'projectName'        => 'String',
     'workflowId'         => 'ID',
-    'subjectIds'         => 'String',
-    'subjectUrls'        => 'String',
-  
-    # discussion board fields
-    'boardId'            => 'ID',
-    'board'              => 'String',
-    'discussionId'       => 'ID',
-    'focus'              => 'String',
-    'focusId'            => 'ID',
-    'focusType'          => 'String',
-    'section'            => 'String',
-    'body'               => 'String',
-    'url'                => 'String',
-    'tags'               => 'String',
+    'typeSpecificData' => 'String',
 
     # output fields
     'period'             => 'ISO8601DateTime',

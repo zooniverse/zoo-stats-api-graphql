@@ -60,4 +60,8 @@ development:
 test:
   <<: *default
   database: zoo_stats_test
+staging:
+  url: <%= ENV['DATABASE_URL'] %>
 
+production:
+  url: <%= ENV['DATABASE_URL'] %>

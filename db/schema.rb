@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2018_11_14_141854) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "event_data"
+    t.jsonb "data"
     t.float "session_time"
     t.index ["event_time"], name: "events_event_time_idx", order: :desc
     t.index ["event_type", "project_id"], name: "index_events_on_event_type_and_project_id"

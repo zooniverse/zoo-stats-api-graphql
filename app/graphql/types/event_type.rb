@@ -20,7 +20,7 @@ module Types
     description: "Project ID"
     field :workflow_id, ID, null: true,
     description: "Workflow ID under project"
-    field :event_data, String, null: true,
+    field :data, String, null: true,
     description: "Extra event metadata"
 
     # output fields

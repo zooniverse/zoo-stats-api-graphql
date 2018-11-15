@@ -12,7 +12,7 @@ RSpec.describe Types::EventType do
     'userId'             => 'ID',
     'projectId'          => 'ID',
     'workflowId'         => 'ID',
-    'eventData'          => 'String',
+    'data'               => 'String',
 
     # output fields
     'period'             => 'ISO8601DateTime',

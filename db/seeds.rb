@@ -6,8 +6,11 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+# Generator_class not migrated to new schema columns
+=begin
 require_relative '../scripts/seeds/generator_class'
 
 generator_1 = Generator.new(0)
 
 1000.times { generator_1.generate_event }
+=end

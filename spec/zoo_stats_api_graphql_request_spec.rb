@@ -5,7 +5,7 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
     end
     it 'should return a health check response' do
       get '/'
-      expected_response = {"status"=>"ok", "version"=>VERSION, "database_status"=>"connected"}
+      expected_response = {"status"=>"ok", "version"=>VERSION, "database_status"=>"connected", "commit_id"=>"not-written"}
       expect(response.body).to eq(expected_response.to_json)
     end
   end

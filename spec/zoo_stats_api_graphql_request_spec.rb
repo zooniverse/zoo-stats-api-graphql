@@ -2,10 +2,11 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
   describe '/' do
     before do
       expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT 1 FROM events").and_return("test response")
+      expect(File).to receive(:read).with("/rails_app/commit_id.txt").and_return("test commit")
     end
     it 'should return a health check response' do
       get '/'
-      expected_response = {"status"=>"ok", "version"=>VERSION, "database_status"=>"connected", "commit_id"=>"not-written"}
+      expected_response = {"status"=>"ok", "version"=>VERSION, "database_status"=>"connected", "commit_id"=>"test commit"}
       expect(response.body).to eq(expected_response.to_json)
     end
   end

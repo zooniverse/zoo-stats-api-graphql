@@ -61,7 +61,7 @@ test:
   <<: *default
   database: zoo_stats_test
 staging:
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= Rails.application.credentials.database_url_staging %>
 
 production:
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= Rails.application.credentials.database_url_production %>

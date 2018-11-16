@@ -3,7 +3,7 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
     before do
       expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT 1 FROM events").and_return("test response")
       cache_store = Rails.cache
-      expect(cache_store).to receive(:fetch).with("commit_id", expires_in: 10.days).and_return("test commit")
+      expect(cache_store).to receive(:fetch).with("commit_id", expires_in: 10.days).and_return("test commit\n")
     end
     it 'should return a health check response' do
       get '/'

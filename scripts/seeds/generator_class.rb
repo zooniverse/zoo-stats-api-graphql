@@ -38,7 +38,7 @@ class Generator
         'user_id':              user_id_options[rand(0..NIL_USER_TO_LOGGED_IN_RATIO)],
         'created_at':           time_stamp,
         'updated_at':           time_stamp,
-        'data':                 "{}",
+        'data':                 {lang: "en"}.to_json,
         'session_time':         session_time,
       }
     )

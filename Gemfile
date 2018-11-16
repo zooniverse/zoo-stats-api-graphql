@@ -22,7 +22,7 @@ gem 'puma', '~> 3.11'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'graphql', '~> 1.7', '>= 1.7.14'
+gem 'graphql', '~> 1.8'
 gem 'composite_primary_keys', '~> 11.0'
 gem 'dotenv-rails'
 gem 'rollbar'

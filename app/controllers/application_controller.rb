@@ -6,8 +6,9 @@ class ApplicationController < ActionController::API
 
   private
   def fetch_commit_id
-    Rails.cache.fetch("commit_id", expires_in: 10.days) do
+    commit_id = Rails.cache.fetch("commit_id", expires_in: 10.days) do
       File.read(File.expand_path("../../../commit_id.txt", __FILE__))
     end
+    commit_id.strip
   end
 end

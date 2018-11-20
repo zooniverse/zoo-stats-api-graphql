@@ -3,5 +3,6 @@ FactoryBot.define do
     sequence(:event_id) { |n| "100#{n}".to_i }
     sequence(:event_source) { |n| "Server ##{n}" }
     sequence(:event_time) { Time.now.round(6) }
+    sequence(:event_type) { "background" }
   end
 end

@@ -30,9 +30,9 @@ RSpec.describe Event, type: :model do
     it 'has composite primary key' do
       expect(Event.find([
         attributes[:event_id],
+        attributes[:event_type]
         attributes[:event_source],
         attributes[:event_time],
-        attributes[:event_type]
         ])).to eq(event)
     end
   end

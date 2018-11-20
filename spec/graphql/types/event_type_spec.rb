@@ -4,7 +4,7 @@ RSpec.describe Types::EventType do
   # 'fieldName'          => 'Field_type'
   { 
     'eventId'            => 'ID!',
-    'eventType'          => 'String',
+    'eventType'          => 'String!',
     'eventTime'          => 'ISO8601DateTime!',
     'eventCreatedAt'     => 'ISO8601DateTime',
     'eventSource'        => 'String!',

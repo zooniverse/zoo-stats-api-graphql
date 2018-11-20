@@ -4,7 +4,7 @@ module Types
     # event specific fields
     field :event_id, ID, null: false,
     description: "Event ID"
-    field :event_type, String, null: true,
+    field :event_type, String, null: false,
     description: "Type of event (classification, comment, ...)"
     field :event_time, GraphQL::Types::ISO8601DateTime, null: false,
     description: "Timestamp of event"

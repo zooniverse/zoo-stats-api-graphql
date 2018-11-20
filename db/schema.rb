@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_14_141854) do
+ActiveRecord::Schema.define(version: 2018_11_20_113739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "timescaledb"
 
-  create_table "events", primary_key: ["event_id", "event_source", "event_time"], force: :cascade do |t|
+  create_table "events", primary_key: ["event_id", "event_source", "event_time", "event_type"], force: :cascade do |t|
     t.bigint "event_id", null: false
-    t.string "event_type"
+    t.string "event_type", null: false
     t.string "event_source", null: false
     t.datetime "event_time", null: false
     t.datetime "event_created_at"

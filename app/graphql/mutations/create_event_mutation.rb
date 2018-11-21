@@ -10,7 +10,8 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(event_payload:)
-      event = Event.build(event_details(event_payload))
+      model = Models.for(event_payload)
+      event = Event.build(event_details(model))
       # TODO: authorisation here
       if event.save
         {
@@ -22,32 +23,27 @@ module Mutations
           event: nil,
           errors: event.errors.full_messages
         }
+      end
     end
 
     private
 
-    def event_details(event_payload)
+    def event_details(model)
       attributes = model.attributes
 
       [
-        event_id: model.id,
-        model.type,
-        model.source,
-        model.time,
-        attributes.project_id,
-        attributes.workflow_id,
-        attributes.user_id,
-        remaining_data(model),
-        session_time(model)
+        event_id:        model.id,
+        event_type:      model.type,
+        event_source:    model.source,
+        event_time:      model.time,
+        project_id:      attributes.project_id,
+        workflow_id:     attributes.workflow_id,
+        user_id:         attributes.user_id,
+        data:            remaining_data(model),
+        session_time:    session_time(model)
       ]
     end
-
-    private
-
-    def event_columns
-      @event_columns ||= %w(event_id event_type event_source event_time project_id workflow_id user_id data session_time).join(',')
-    end
-
+    
     def remaining_data(model)
       # TODO: do we want to store the metadata or the diff of the data minus what we have?
       # attributes.data - attributes already in payload

@@ -1,7 +1,7 @@
 require_relative 'mutation_root'
 
 module Mutations
-  class CreateEvent < Mutation::BaseMutation
+  class CreateEventMutation < Mutations::BaseMutation
     null true
 
     argument :event_payload, String, required: true

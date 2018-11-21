@@ -1,6 +1,7 @@
 RSpec.describe Types::MutationType do
   subject { Types::MutationType }
-
+  puts subject.fields
+=begin
   # 'mutationName'        => 'Output_type', {
   #   'argumentName'      => 'Argument_type' }
   {
@@ -20,4 +21,5 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+=end
 end

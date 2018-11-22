@@ -1,13 +1,21 @@
 Rspec.describe Transformers::PanoptesClassification do
   subject(:panoptes_classification_transformer) { Transformers::PanoptesClassification }
+
+  let(:event_id) { "18521902" }
+  let(:event_type) { "classification" }
+  let(:event_source) { "panoptes" }
+  let(:event_time) { "2016-10-10T12:59:46.795Z" }
+  let(:project_id) { "764" }
+  let(:workflow_id) { "2303" }
+  let(:user_id) { "1" }
   let(:payload) do
     {
-      "source" => "panoptes",
-      "type" => "classification",
+      "source" => event_source,
+      "type" => event_type,
       "version" => "1.0.0",
       "timestamp" => "2016-10-10T12:59:48Z",
       "data" => {
-        "id" => "18521902",
+        "id" => event_id,
         "created_at" => "2016-10-10T12:59:48.233Z",
         "updated_at" => "2016-10-10T12:59:48.293Z",
         "user_ip" => "127.0.0.1",
@@ -29,7 +37,7 @@ Rspec.describe Transformers::PanoptesClassification do
             "started_at" => "2016-10-10T12:59:44.812Z",
             "user_agent" => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0",
             "utc_offset" => "0",
-            "finished_at" => "2016-10-10T12:59:46.795Z",
+            "finished_at" => event_time,
             "live_project" => true,
             "user_language" => "en",
             "user_group_ids" => [
@@ -47,9 +55,9 @@ Rspec.describe Transformers::PanoptesClassification do
         },
         "href" => "/classifications/18521902",
         "links" => {
-            "project" => "764",
-            "user" => "1",
-            "workflow" => "2303",
+            "project" => project_id,
+            "user" => user_id,
+            "workflow" => workflow_id,
             "workflow_content" => "2302",
             "subjects" => ["3069945"]
         }
@@ -120,13 +128,13 @@ Rspec.describe Transformers::PanoptesClassification do
 
   let(:expected_result) do 
     {
-      event_id:        payload.dig("data", "id"),
-      event_type:      payload.dig("type"),
-      event_source:    payload.dig("source"),
-      event_time:      DateTime.parse(payload.dig("data", "metadata", "finished_at")),
-      project_id:      payload.dig("data", "links", "project"),
-      workflow_id:     payload.dig("data", "links", "workflow"),
-      user_id:         payload.dig("data", "links", "user"),
+      event_id:        event_id,
+      event_type:      event_type,
+      event_source:    event_source,
+      event_time:      DateTime.parse(event_time),
+      project_id:      project_id,
+      workflow_id:     workflow_id,
+      user_id:         user_id,
       data:            expected_data,
       session_time:    expected_session_time
     }

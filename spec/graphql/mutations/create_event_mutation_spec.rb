@@ -18,10 +18,10 @@ Rspec.describe ZooStatsSchema do
     
   before do
     transformer_stub = double("transformer_stub", :transform => prepared_payload)
-    event_payload_string = eval(event_payload) if not event_payload.nil?
-    allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_string).and_return(transformer_stub)
+    event_payload_hash = eval(event_payload[0]) if not event_payload.nil?
+    allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_hash).and_return(transformer_stub)
   end
-  
+
   describe 'createEvent' do
     context 'when there is an empty payload' do
       let(:event_payload) { nil }
@@ -35,8 +35,8 @@ Rspec.describe ZooStatsSchema do
       end
     end
 
-    context 'when there is a payload' do
-      let(:event_payload) { '"{test: hash}"' }
+    context 'when there is a single event payload' do
+      let(:event_payload) { ["{\"test\" => \"hash\"}"] }
       let(:prepared_payload) do 
         {
           event_id:            123,

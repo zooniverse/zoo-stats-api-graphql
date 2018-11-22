@@ -1,4 +1,5 @@
 require_relative 'mutation_root'
+require_relative 'transformers/panoptes_classification'
 
 module Mutations
   class CreateEventMutation < Mutations::BaseMutation
@@ -6,21 +7,27 @@ module Mutations
 
     argument :event_payload, String, required: true
 
-    field :event, Event, null: true
     field :errors, [String], null: false
 
     def resolve(event_payload:)
-      model = Models.for(event_payload)
-      event = Event.build(event_details(model))
+      # TODO: Add guard here to only ingest data that meets the schema
+      # avoid ouroboros data and panoptes talk data until we have verified
+      # the schema conformance here
+      # return unless model.type && model.source == panoptes classificaiton
+      
       # TODO: authorisation here
+      if event_payload.nil?
+        return {errors: [{"message" => "ArgumentError"}]}
+      end
+      
+      prepared_payload = transform(event_payload, Transformers::PanoptesClassification)
+      event = Event.new(prepared_payload)
       if event.save
         {
-          event: event,
-          errors: [],
+          errors: []
         }
       else
         {
-          event: nil,
           errors: event.errors.full_messages
         }
       end
@@ -28,36 +35,8 @@ module Mutations
 
     private
 
-    def event_details(model)
-      attributes = model.attributes
-
-      [
-        event_id:        model.id,
-        event_type:      model.type,
-        event_source:    model.source,
-        event_time:      model.time,
-        project_id:      attributes.project_id,
-        workflow_id:     attributes.workflow_id,
-        user_id:         attributes.user_id,
-        data:            remaining_data(model),
-        session_time:    session_time(model)
-      ]
-    end
-    
-    def remaining_data(model)
-      # TODO: do we want to store the metadata or the diff of the data minus what we have?
-      # attributes.data - attributes already in payload
-    end
-
-    def session_time(model)
-      metadata = model.dig('data','metadata')
-      started_at = started_at['started_at']
-      finished_at = started_at['finished_at']
-
-      # TODO: convert these to time objects
-      # taking into account the TZ info in the string
-      # and subtracting them to find the diff
-
+    def transform(event_payload, transformer)
+      transformer.new(event_payload).transform
     end
   end
 end

@@ -20,7 +20,7 @@ module Mutations
         return {errors: [{"message" => "ArgumentError"}]}
       end
       
-      prepared_payload = transform(event_payload, Transformers::PanoptesClassification)
+      prepared_payload = Transformers::PanoptesClassification.new(event_payload).transform
       event = Event.new(prepared_payload)
       if event.save
         {
@@ -31,12 +31,6 @@ module Mutations
           errors: event.errors.full_messages
         }
       end
-    end
-
-    private
-
-    def transform(event_payload, transformer)
-      transformer.new(event_payload).transform
     end
   end
 end

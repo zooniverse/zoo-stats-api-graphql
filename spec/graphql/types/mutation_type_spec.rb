@@ -1,7 +1,6 @@
 RSpec.describe Types::MutationType do
   subject { Types::MutationType }
-  # 'mutationName'        => {
-  #   'argumentName'      => 'Argument_type' }
+
   {
     'createEvent'         => {
       'eventPayload'      => 'String!'

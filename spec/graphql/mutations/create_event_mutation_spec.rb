@@ -15,11 +15,15 @@ Rspec.describe ZooStatsSchema do
       variables: variables
     )
   end
+  let(:prepared_payload_1) { nil }
+  let(:prepared_payload_2) { nil }
     
   before do
     transformer_stub = double("transformer_stub", :transform => prepared_payload)
+    transformer_stub_1 = double("transformer_stub", :transform => prepared_payload_1)
+    transformer_stub_2 = double("transformer_stub", :transform => prepared_payload_2)
     event_payload_hash = eval(event_payload[0]) if not event_payload.nil?
-    allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_hash).and_return(transformer_stub)
+    allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_hash).and_return(transformer_stub, transformer_stub_1, transformer_stub_2)
   end
 
   describe 'createEvent' do
@@ -57,6 +61,38 @@ Rspec.describe ZooStatsSchema do
         prepared_payload.each do |key, value|
           expect(value).to eq(stored_attributes[key])
         end
+      end
+    end
+
+    context 'when there is an erroring event' do
+      let(:event_payload) { ["{\"test\" => \"hash\"}", "{\"test\" => \"hash\"}", "{\"test\" => \"hash\"}"] }
+      let(:prepared_payload) do 
+        {
+          event_id:            123,
+          event_type:          "classification",
+          event_source:        "Panoptes",
+          event_time:          DateTime.parse('2018-11-06 05:45:09'),
+          project_id:          456,
+          workflow_id:         789,
+          user_id:             1011,
+          data:                {"metadata" => 'test'},
+          session_time:        5.0
+        }
+      end
+      let(:prepared_payload_1) do 
+        prepared_payload.merge({
+          event_id:            456
+        })
+      end
+      let(:prepared_payload_2) do 
+        prepared_payload.merge({
+          event_id:            789,
+          event_source:        nil
+        })
+      end
+      it 'reverts the batch and returns the error' do
+        expect { result }.not_to change { Event.count }
+        expect(result["errors"][0]["message"]).to eq("Validation failed: Event source can't be blank")
       end
     end
   end

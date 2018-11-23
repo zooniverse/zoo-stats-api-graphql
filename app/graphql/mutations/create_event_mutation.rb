@@ -27,8 +27,11 @@ module Mutations
         events_list.append(Event.new(prepared_payload))
       end
 
-      events_list.each do |event|
-        return { errors: event.errors.full_messages } unless event.save
+      ActiveRecord::Base.transaction do
+        events_list.each do |event|
+          #return { errors: event.errors.full_messages } unless event.save!
+          event.save!
+        end
       end
       { errors: [] }
     end

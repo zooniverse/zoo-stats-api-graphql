@@ -1,9 +1,9 @@
 Rspec.describe ZooStatsSchema do
   let(:context) { {} }
-  let(:variables) { {} }
+  let(:variables) { {"event_payload": event_payload} }
   let(:mutation_string) do
-    "mutation {
-      createEvent(eventPayload: #{event_payload}){
+    "mutation ($event_payload: String!){
+      createEvent(eventPayload: $event_payload){
         errors
       }
     }"
@@ -22,16 +22,18 @@ Rspec.describe ZooStatsSchema do
     transformer_stub = double("transformer_stub", :transform => prepared_payload)
     transformer_stub_1 = double("transformer_stub", :transform => prepared_payload_1)
     transformer_stub_2 = double("transformer_stub", :transform => prepared_payload_2)
-    event_payload_hash = eval(event_payload[0]) if not event_payload.nil?
+    event_payload_hash = JSON.parse(event_payload)[0] if not event_payload.empty?
     allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_hash).and_return(transformer_stub, transformer_stub_1, transformer_stub_2)
   end
 
   describe 'createEvent' do
     context 'when there is an empty payload' do
-      let(:event_payload) { nil }
+      let(:event_payload) { "" }
       let(:prepared_payload) { nil }
       it 'throws an Argument error' do
-        expect(result["errors"][0]["message"]).to start_with("Argument")
+        errors = result["data"]["createEvent"]["errors"]
+        message = eval(errors[0])["message"]
+        expect(message).to start_with("Argument")
       end
 
       it 'does not add anything to the database' do
@@ -40,7 +42,7 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'when there is a single event payload' do
-      let(:event_payload) { ["{\"test\" => \"hash\"}"] }
+      let(:event_payload) { JSON.dump([{"test" => "hash"}]) }
       let(:prepared_payload) do 
         {
           event_id:            123,
@@ -65,7 +67,7 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'when there is an erroring event' do
-      let(:event_payload) { ["{\"test\" => \"hash\"}", "{\"test\" => \"hash\"}", "{\"test\" => \"hash\"}"] }
+      let(:event_payload) { JSON.dump([{"test" => "hash"},{"test" => "hash"},{"test" => "hash"}]) }
       let(:prepared_payload) do 
         {
           event_id:            123,

@@ -5,7 +5,7 @@ module Mutations
   class CreateEventMutation < Mutations::BaseMutation
     null true
 
-    argument :event_payload, [String], required: true, description: 'list of events in json format'
+    argument :event_payload, String, required: true, description: 'array of event object in json string format'
 
     field :errors, [String], null: false
 
@@ -16,14 +16,14 @@ module Mutations
       # return unless model.type && model.source == panoptes classificaiton
       
       # TODO: authorisation here
-      if event_payload.nil?
-        return {errors: [{"message" => "ArgumentError"}]}
+      if event_payload.empty?
+        return { errors: [{"message" => "ArgumentError"}] }
       end
       
       events_list = []
-      event_payload.each do |event|
-        event_hash = eval(event)
-        prepared_payload = Transformers::PanoptesClassification.new(event_hash).transform
+      event_json = JSON.parse(event_payload)
+      event_json.each do |event|
+        prepared_payload = Transformers::PanoptesClassification.new(event).transform
         events_list.append(Event.new(prepared_payload))
       end
 

@@ -3,7 +3,7 @@ RSpec.describe Types::MutationType do
 
   {
     'createEvent'         => {
-      'eventPayload'      => '[String!]!'
+      'eventPayload'      => 'String!'
     }
   }.each do |field_name, expected_arguments|
     it 'matches field descriptions' do

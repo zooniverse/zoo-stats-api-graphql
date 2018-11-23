@@ -68,7 +68,7 @@ module Transformers
     end
 
     def subject_ids
-      payload.dig("data", "links", "subjects")
+      payload.dig("data", "links", "subjects").first
     end
 
     def created_at

@@ -141,7 +141,7 @@ Rspec.describe Transformers::PanoptesClassification do
 
   let(:expected_data) do
     {
-      subject_ids:         subject_ids,
+      subject_ids:         subject_ids.first,
       created_at:          DateTime.parse(created_at),
       updated_at:          DateTime.parse(updated_at),
       workflow_version:    workflow_version,

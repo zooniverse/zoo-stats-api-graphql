@@ -28,10 +28,7 @@ module Mutations
       end
 
       ActiveRecord::Base.transaction do
-        events_list.each do |event|
-          #return { errors: event.errors.full_messages } unless event.save!
-          event.save!
-        end
+        events_list.each { |event| event.save! }
       end
       { errors: [] }
     end

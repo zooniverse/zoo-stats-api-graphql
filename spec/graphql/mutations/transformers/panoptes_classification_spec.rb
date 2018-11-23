@@ -4,10 +4,23 @@ Rspec.describe Transformers::PanoptesClassification do
   let(:event_id) { "18521902" }
   let(:event_type) { "classification" }
   let(:event_source) { "panoptes" }
-  let(:event_time) { "2016-10-10T12:59:46.795Z" }
+  let(:finished_at) { "2016-10-10T12:59:46.795Z" }
   let(:project_id) { "764" }
   let(:workflow_id) { "2303" }
   let(:user_id) { "1" }
+
+  let(:subject_ids) { ["3069945"] }
+  let(:created_at) { "2016-10-10T12:59:48.233Z" }
+  let(:updated_at) { "2016-10-10T12:59:48.293Z" }
+  let(:workflow_version) { "2.5" }
+  let(:gold_standard) { nil }
+  let(:expert_classifier) { nil }
+
+  let(:started_at) { "2016-10-10T12:59:44.812Z" }
+  let(:session) { "8c09ed53c6ee1b397d9ae6b6d1eef096a2c966debdc13678d2b151c8c82c3c8c" }
+  let(:utc_offset) { "0" }
+  let(:user_language) { "en" }
+
   let(:payload) do
     {
       "source" => event_source,
@@ -16,12 +29,12 @@ Rspec.describe Transformers::PanoptesClassification do
       "timestamp" => "2016-10-10T12:59:48Z",
       "data" => {
         "id" => event_id,
-        "created_at" => "2016-10-10T12:59:48.233Z",
-        "updated_at" => "2016-10-10T12:59:48.293Z",
+        "created_at" => created_at,
+        "updated_at" => updated_at,
         "user_ip" => "127.0.0.1",
-        "workflow_version" => "2.5",
-        "gold_standard" =>  nil,
-        "expert_classifier" =>  nil,
+        "workflow_version" => workflow_version,
+        "gold_standard" =>  gold_standard,
+        "expert_classifier" =>  expert_classifier,
         "annotations" => [
             {
               "task" => "init",
@@ -29,17 +42,17 @@ Rspec.describe Transformers::PanoptesClassification do
             }
         ],
         "metadata" => {
-            "session" => "8c09ed53c6ee1b397d9ae6b6d1eef096a2c966debdc13678d2b151c8c82c3c8c",
+            "session" => session,
             "viewport" => {
               "width" => 1440,
               "height" => 661
             },
-            "started_at" => "2016-10-10T12:59:44.812Z",
+            "started_at" => started_at,
             "user_agent" => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0",
-            "utc_offset" => "0",
-            "finished_at" => event_time,
+            "utc_offset" => utc_offset,
+            "finished_at" => finished_at,
             "live_project" => true,
-            "user_language" => "en",
+            "user_language" => user_language,
             "user_group_ids" => [
 
             ],
@@ -59,7 +72,7 @@ Rspec.describe Transformers::PanoptesClassification do
             "user" => user_id,
             "workflow" => workflow_id,
             "workflow_content" => "2302",
-            "subjects" => ["3069945"]
+            "subjects" => subject_ids
         }
       },
       "linked" => {
@@ -116,13 +129,26 @@ Rspec.describe Transformers::PanoptesClassification do
     }
   end
 
+  let(:metadata) do
+    {
+      started_at:     started_at,
+      finished_at:    finished_at,
+      session:        session,
+      utc_offset:     utc_offset,
+      user_language:  user_language
+    }
+  end
+
   let(:expected_data) do
-    # TODO: do we want to store the metadata or the diff of the data minus what we have?
-    # attributes.data - attributes already in payload
-    expected_data = payload["data"]
-    #expected_data.except!("id")
-    #expected_data["metadata"].except!("finished_at")
-    #expected_data["links"].except!("project", "workflow", "user")
+    {
+      subject_ids:         subject_ids,
+      created_at:          created_at,
+      updated_at:          updated_at,
+      workflow_version:    workflow_version,
+      gold_standard:       gold_standard,
+      expert_classifier:   expert_classifier,
+      metadata:            metadata
+    }
   end
   let(:expected_session_time) { 2.0 }
 
@@ -131,7 +157,7 @@ Rspec.describe Transformers::PanoptesClassification do
       event_id:        event_id,
       event_type:      event_type,
       event_source:    event_source,
-      event_time:      DateTime.parse(event_time),
+      event_time:      DateTime.parse(finished_at),
       project_id:      project_id,
       workflow_id:     workflow_id,
       user_id:         user_id,
@@ -142,43 +168,6 @@ Rspec.describe Transformers::PanoptesClassification do
 
   it 'returns a hash with expected data' do
     transformed_payload = panoptes_classification_transformer.new(payload).transform
-    expect(transformed_payload.keys).to eq(expected_result.keys)
-
-    transformed_payload.each do |k|
-      expect(transformed_payload[k]).to eq(expected_result[k])
-    end
-    
-    expect(transformed_payload[:data].keys).to eq(expected_result[:data].keys)
+    expect(transformed_payload).to eq(expected_result)
   end
-end
-
-
-def event_data(attribute)
-  event.dig("data",attribute)
-end
-
-def link_data(link)
-  event_data("links").dig(link)
-end
-
-def test_id
-  assert_equal(event_data("id"), panoptes_classification.id)
-end
-
-def test_timestamp
-  expected = DateTime.parse(event_data("updated_at"))
-  assert_equal(expected, panoptes_classification.timestamp)
-end
-
-def test_attributes
-  expected = {
-    classification_id: event_data("id"),
-    project_id: link_data("project"),
-    workflow_id: link_data("workflow"),
-    user_id: link_data("user"),
-    subject_ids: link_data("subjects"),
-    subject_urls: event.dig("linked", "subjects", 0, "locations"),
-    geo: {}
-  }
-  assert_equal(expected, panoptes_classification.attributes)
 end

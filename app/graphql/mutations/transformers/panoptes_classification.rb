@@ -21,6 +21,28 @@ module Transformers
     end
 
     private
+    def remaining_data
+      {
+        subject_ids:         subject_ids,
+        created_at:          created_at,
+        updated_at:          updated_at,
+        workflow_version:    workflow_version,
+        gold_standard:       gold_standard,
+        expert_classifier:   expert_classifier,
+        metadata:            output_metadata
+      }
+    end
+
+    def output_metadata
+      {
+        started_at:     started_at,
+        finished_at:    time,
+        session:        session,
+        utc_offset:     utc_offset,
+        user_language:  user_language
+      }
+    end
+
     def id
       payload.dig("data", "id")
     end
@@ -49,10 +71,44 @@ module Transformers
       payload.dig("data", "links", "user")
     end
 
-    def remaining_data
-      # TODO: do we want to store the metadata or the diff of the data minus what we have?
-      # attributes.data - attributes already in payload
-      payload["data"]
+    def subject_ids
+      payload.dig("data", "links", "subjects")
+    end
+
+    def created_at
+      payload.dig("data", "created_at")
+    end
+
+    def updated_at
+      payload.dig("data", "updated_at")
+    end
+
+    def workflow_version
+      payload.dig("data", "workflow_version")
+    end
+
+    def gold_standard
+      payload.dig("data", "gold_standard")
+    end
+
+    def expert_classifier
+      payload.dig("data", "expert_classifier")
+    end
+
+    def started_at
+      payload.dig("data", "metadata", "started_at")
+    end
+
+    def session
+      payload.dig("data", "metadata", "session")
+    end
+
+    def utc_offset
+      payload.dig("data", "metadata", "utc_offset")
+    end
+
+    def user_language
+      payload.dig("data", "metadata", "user_language")
     end
 
     def session_time

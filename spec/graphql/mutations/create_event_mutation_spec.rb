@@ -56,7 +56,7 @@ Rspec.describe ZooStatsSchema do
           session_time:        5.0
         }
       end
-      it 'Adds the correct Event into the database' do
+      it 'adds the correct Event into the database' do
         expect { result }.to change { Event.count }.by 1
 
         stored_attributes = Event.last.attributes.to_options
@@ -95,6 +95,31 @@ Rspec.describe ZooStatsSchema do
       it 'reverts the batch and returns the error' do
         expect { result }.not_to change { Event.count }
         expect(result["errors"][0]["message"]).to eq("Validation failed: Event source can't be blank")
+      end
+    end
+
+    context 'when there is a repeated event' do
+      let(:event_payload) { JSON.dump([{"test" => "hash"},{"test" => "hash"}]) }
+      let(:prepared_payload) do 
+        {
+          event_id:            123,
+          event_type:          "classification",
+          event_source:        "Panoptes",
+          event_time:          DateTime.parse('2018-11-06 05:45:09'),
+          project_id:          456,
+          workflow_id:         789,
+          user_id:             1011,
+          data:                {"metadata" => 'test'},
+          session_time:        5.0
+        }
+      end
+      let(:prepared_payload_1) do 
+        prepared_payload
+      end
+      it 'add only one row to the database without errors' do
+        expect { result }.to change { Event.count }.by 1
+        errors = result["data"]["createEvent"]["errors"][0]
+        expect(errors).to be_nil
       end
     end
   end

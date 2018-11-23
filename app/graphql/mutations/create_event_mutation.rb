@@ -28,7 +28,7 @@ module Mutations
       end
 
       ActiveRecord::Base.transaction do
-        events_list.each { |event| event.save! }
+        events_list.each { |event| event.upsert! }
       end
       { errors: [] }
     end

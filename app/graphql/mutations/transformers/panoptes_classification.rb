@@ -11,7 +11,7 @@ module Transformers
         event_id:        id,
         event_type:      type,
         event_source:    source,
-        event_time:      time,
+        event_time:      finished_at,
         project_id:      project,
         workflow_id:     workflow,
         user_id:         user,
@@ -36,15 +36,11 @@ module Transformers
     def output_metadata
       {
         started_at:     started_at,
-        finished_at:    time,
+        finished_at:    finished_at,
         session:        session,
         utc_offset:     utc_offset,
         user_language:  user_language
       }
-    end
-
-    def id
-      payload.dig("data", "id")
     end
 
     def type
@@ -55,8 +51,8 @@ module Transformers
       payload.dig("source")
     end
 
-    def time
-      DateTime.parse(payload.dig("data", "metadata", "finished_at"))
+    def id
+      payload.dig("data", "id")
     end
 
     def project
@@ -76,11 +72,11 @@ module Transformers
     end
 
     def created_at
-      payload.dig("data", "created_at")
+      DateTime.parse(payload.dig("data", "created_at")) if payload.dig("data", "created_at")
     end
 
     def updated_at
-      payload.dig("data", "updated_at")
+      DateTime.parse(payload.dig("data", "updated_at")) if payload.dig("data", "updated_at")
     end
 
     def workflow_version
@@ -96,7 +92,11 @@ module Transformers
     end
 
     def started_at
-      payload.dig("data", "metadata", "started_at")
+      DateTime.parse(payload.dig("data", "metadata", "started_at")) if payload.dig("data", "metadata", "started_at")
+    end
+
+    def finished_at
+      DateTime.parse(payload.dig("data", "metadata", "finished_at")) if payload.dig("data", "metadata", "finished_at")
     end
 
     def session
@@ -112,10 +112,7 @@ module Transformers
     end
 
     def session_time
-      metadata = payload.dig("data","metadata")
-      started_at = metadata["started_at"]
-      finished_at = metadata["finished_at"]
-      diff = DateTime.parse(finished_at).to_i - DateTime.parse(started_at).to_i
+      diff = finished_at.to_i - started_at.to_i
       diff.to_f
     end
   end

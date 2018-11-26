@@ -62,15 +62,21 @@ module Transformers
     end
 
     def subject_id
-      payload.dig("data", "links", "subjects").first
+      if subject_ids = payload.dig("data", "links", "subjects")
+        subject_ids.first
+      end
     end
 
     def created_at
-      DateTime.parse(payload.dig("data", "created_at")) if payload.dig("data", "created_at")
+      if created_at = payload.dig("data", "created_at")
+        DateTime.parse(created_at)
+      end
     end
 
     def updated_at
-      DateTime.parse(payload.dig("data", "updated_at")) if payload.dig("data", "updated_at")
+      if updated_at = payload.dig("data", "updated_at")
+        DateTime.parse(updated_at)
+      end
     end
 
     def workflow_version
@@ -86,11 +92,15 @@ module Transformers
     end
 
     def started_at
-      DateTime.parse(payload.dig("data", "metadata", "started_at")) if payload.dig("data", "metadata", "started_at")
+      if started_at = payload.dig("data", "metadata", "started_at")
+        DateTime.parse(started_at)
+      end
     end
 
     def finished_at
-      DateTime.parse(payload.dig("data", "metadata", "finished_at")) if payload.dig("data", "metadata", "finished_at")
+      if finished_at = payload.dig("data", "metadata", "finished_at")
+        DateTime.parse(finished_at)
+      end
     end
 
     def session

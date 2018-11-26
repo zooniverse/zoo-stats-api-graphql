@@ -1,5 +1,5 @@
 require_relative 'mutation_root'
-require_relative 'transformers/panoptes_classification'
+require_relative 'transformers'
 
 module Mutations
   class CreateEventMutation < Mutations::BaseMutation
@@ -22,7 +22,8 @@ module Mutations
       # the schema conformance here
       # return unless model.type && model.source == panoptes classificaiton
       event_json.each do |event|
-        prepared_payload = Transformers::PanoptesClassification.new(event).transform
+        transformer = Transformers.for(event)
+        prepared_payload = transformer.new(event).transform
         events_list.append(Event.new(prepared_payload))
       end
 

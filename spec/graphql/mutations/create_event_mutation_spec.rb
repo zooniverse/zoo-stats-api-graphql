@@ -24,6 +24,7 @@ Rspec.describe ZooStatsSchema do
     transformer_stub_2 = double("transformer_stub", :transform => prepared_payload_2)
     event_payload_hash = JSON.parse(event_payload)[0] if not event_payload.empty?
     allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_hash).and_return(transformer_stub, transformer_stub_1, transformer_stub_2)
+    allow(Transformers).to receive(:for).with(event_payload_hash).and_return(Transformers::PanoptesClassification)
   end
 
   describe 'createEvent' do

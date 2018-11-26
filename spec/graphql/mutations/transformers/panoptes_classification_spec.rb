@@ -129,25 +129,19 @@ Rspec.describe Transformers::PanoptesClassification do
     }
   end
 
-  let(:metadata) do
-    {
-      started_at:     DateTime.parse(started_at),
-      finished_at:    DateTime.parse(finished_at),
-      session:        session,
-      utc_offset:     utc_offset,
-      user_language:  user_language
-    }
-  end
-
   let(:expected_data) do
     {
-      subject_id:         subject_ids.first,
-      created_at:          DateTime.parse(created_at),
-      updated_at:          DateTime.parse(updated_at),
-      workflow_version:    workflow_version,
-      gold_standard:       gold_standard,
-      expert_classifier:   expert_classifier,
-      metadata:            metadata
+      subject_id:              subject_ids.first,
+      created_at:              DateTime.parse(created_at),
+      updated_at:              DateTime.parse(updated_at),
+      workflow_version:        workflow_version,
+      gold_standard:           gold_standard,
+      expert_classifier:       expert_classifier,
+      metadata_started_at:     DateTime.parse(started_at),
+      metadata_finished_at:    DateTime.parse(finished_at),
+      metadata_session:        session,
+      metadata_utc_offset:     utc_offset,
+      metadata_user_language:  user_language
     }
   end
   let(:expected_session_time) { 2.0 }

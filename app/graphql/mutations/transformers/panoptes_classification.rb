@@ -23,23 +23,17 @@ module Transformers
     private
     def remaining_data
       {
-        subject_id:         subject_id,
-        created_at:          created_at,
-        updated_at:          updated_at,
-        workflow_version:    workflow_version,
-        gold_standard:       gold_standard,
-        expert_classifier:   expert_classifier,
-        metadata:            output_metadata
-      }
-    end
-
-    def output_metadata
-      {
-        started_at:     started_at,
-        finished_at:    finished_at,
-        session:        session,
-        utc_offset:     utc_offset,
-        user_language:  user_language
+        subject_id:              subject_id,
+        created_at:              created_at,
+        updated_at:              updated_at,
+        workflow_version:        workflow_version,
+        gold_standard:           gold_standard,
+        expert_classifier:       expert_classifier,
+        metadata_started_at:     started_at,
+        metadata_finished_at:    finished_at,
+        metadata_session:        session,
+        metadata_utc_offset:     utc_offset,
+        metadata_user_language:  user_language
       }
     end
 

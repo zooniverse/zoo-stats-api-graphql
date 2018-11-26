@@ -1,8 +1,6 @@
 RSpec.describe Types::QueryType do
   subject { Types::QueryType }
 
-  # 'queryName'           => 'Output_type', {
-  #   'argumentName'      => 'Argument_type' }
   {
     'userIdQuery'         => ['[Event!]!', {
       'userId'            => 'ID!'

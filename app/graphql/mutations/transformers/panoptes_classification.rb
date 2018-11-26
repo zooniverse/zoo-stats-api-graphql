@@ -92,14 +92,16 @@ module Transformers
     end
 
     def started_at
+      return @started_at if defined? @started_at
       if started_at = payload.dig("data", "metadata", "started_at")
-        DateTime.parse(started_at)
+        @started_at = DateTime.parse(started_at)
       end
     end
 
     def finished_at
+      return @finished_at if defined? @finished_at
       if finished_at = payload.dig("data", "metadata", "finished_at")
-        DateTime.parse(finished_at)
+        @finished_at = DateTime.parse(finished_at)
       end
     end
 

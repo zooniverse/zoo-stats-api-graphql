@@ -13,6 +13,7 @@ RSpec.describe Types::EventType do
     'projectId'          => 'ID',
     'workflowId'         => 'ID',
     'data'               => 'String',
+    'geo'                => 'String',
 
     # output fields
     'period'             => 'ISO8601DateTime',

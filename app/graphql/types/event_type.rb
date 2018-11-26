@@ -22,6 +22,8 @@ module Types
     description: "Workflow ID under project"
     field :data, String, null: true,
     description: "Extra event metadata"
+    field :geo, String, null: true,
+    description: "Geo location data"
 
     # output fields
     field :period, GraphQL::Types::ISO8601DateTime, null: true,

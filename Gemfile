@@ -11,6 +11,7 @@ gem 'dotenv-rails'
 gem 'rollbar'
 gem 'panoptes-client', '~> 0.3.7'
 gem 'active_record_upsert'
+gem 'geocoder'
 
 
 group :development, :test do

@@ -46,6 +46,7 @@ Rspec.describe ZooStatsSchema do
         event_attributes.each do |key, value|
           expect(value).to eq(stored_attributes[key])
         end
+        expect(stored_attributes[:session_time]).to eq(1.0)
       end
     end
 
@@ -82,6 +83,7 @@ module Transformers
     end
 
     def transform
+      payload["session_time"] = 1.0
       payload
     end
   end

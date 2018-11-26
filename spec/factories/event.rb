@@ -10,7 +10,6 @@ FactoryBot.define do
       sequence(:workflow_id)  { |n| "300#{n}".to_i }
       sequence(:user_id)      { |n| "400#{n}".to_i }
       data { {"metadata" => "test"} }
-      sequence(:session_time) { |n| n.to_f }
     end
   end
 end

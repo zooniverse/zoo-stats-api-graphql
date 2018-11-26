@@ -10,11 +10,6 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(event_payload:)
-      # TODO: Add guard here to only ingest data that meets the schema
-      # avoid ouroboros data and panoptes talk data until we have verified
-      # the schema conformance here
-      # return unless model.type && model.source == panoptes classificaiton
-      
       # TODO: authorisation here
       if event_payload.empty?
         return { errors: [{"message" => "ArgumentError"}] }
@@ -22,6 +17,10 @@ module Mutations
       
       events_list = []
       event_json = JSON.parse(event_payload)
+      # TODO: Add guard here to only ingest data that meets the schema
+      # avoid ouroboros data and panoptes talk data until we have verified
+      # the schema conformance here
+      # return unless model.type && model.source == panoptes classificaiton
       event_json.each do |event|
         prepared_payload = Transformers::PanoptesClassification.new(event).transform
         events_list.append(Event.new(prepared_payload))

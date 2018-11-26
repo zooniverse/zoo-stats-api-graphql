@@ -8,6 +8,7 @@ HEADERS  = {"Content-Type": "application/json", "Accept": "application/json"}
 ENDPOINT = os.environ["KINESIS_STREAM_ENDPOINT"]  # "https://caesar-staging.zooniverse.org/kinesis"
 USERNAME = os.environ["KINESIS_STREAM_USERNAME"]
 PASSWORD = os.environ["KINESIS_STREAM_PASSWORD"]
+MUTATION = "mutation ($payload: String!){ createEvent(eventPayload: $payload){ errors } }"
 
 def lambda_handler(event, context):
   payloads = [json.loads(base64.b64decode(record["kinesis"]["data"])) for record in event["Records"]]
@@ -15,7 +16,8 @@ def lambda_handler(event, context):
 
   if dicts:
     data = json.dumps({"payload": dicts})
-    r = requests.post(ENDPOINT, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS, data=data)
+    graphql = { "query": MUTATION, "variables": data }
+    r = requests.post(ENDPOINT, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS, data=graphql)
     r.raise_for_status()
 
 def should_send(payload):

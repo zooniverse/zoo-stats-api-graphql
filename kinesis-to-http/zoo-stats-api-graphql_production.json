@@ -1,0 +1,15 @@
+{
+  "name": "zoo-stats-api-graphql_production",
+  "description": "It forwards Kinesis stream to Zoo Stats Api GraphQL production",
+  "region": "us-east-1",
+  "handler": "zoo-stats-api-graphql.lambda_handler",
+  "role": "arn:aws:iam::927935712646:role/zooniverse-kinesis-lambda",
+  "requirements": [],
+  "ignore": [
+    ".travis.yml",
+    ".git",
+    "/*.pyc"
+  ],
+  "timeout": 30,
+  "memory": 128
+}

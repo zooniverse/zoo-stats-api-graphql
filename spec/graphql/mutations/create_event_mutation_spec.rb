@@ -15,22 +15,15 @@ Rspec.describe ZooStatsSchema do
       variables: variables
     )
   end
-  let(:prepared_payload_1) { nil }
-  let(:prepared_payload_2) { nil }
     
   before do
-    transformer_stub = double("transformer_stub", :transform => prepared_payload)
-    transformer_stub_1 = double("transformer_stub", :transform => prepared_payload_1)
-    transformer_stub_2 = double("transformer_stub", :transform => prepared_payload_2)
-    event_payload_hash = JSON.parse(event_payload)[0] if not event_payload.empty?
-    allow(Transformers::PanoptesClassification).to receive(:new).with(event_payload_hash).and_return(transformer_stub, transformer_stub_1, transformer_stub_2)
-    allow(Transformers).to receive(:for).with(event_payload_hash).and_return(Transformers::PanoptesClassification)
+    allow(Transformers).to receive(:for).and_return(Transformers::TransformerDouble)
   end
 
   describe 'createEvent' do
     context 'when there is an empty payload' do
       let(:event_payload) { "" }
-      let(:prepared_payload) { nil }
+
       it 'throws an Argument error' do
         errors = result["data"]["createEvent"]["errors"]
         message = eval(errors[0])["message"]
@@ -43,56 +36,25 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'when there is a single event payload' do
-      let(:event_payload) { JSON.dump([{"test" => "hash"}]) }
-      let(:prepared_payload) do 
-        {
-          event_id:            123,
-          event_type:          "classification",
-          event_source:        "Panoptes",
-          event_time:          DateTime.parse('2018-11-06 05:45:09'),
-          project_id:          456,
-          workflow_id:         789,
-          user_id:             1011,
-          data:                {"metadata" => 'test'},
-          session_time:        5.0
-        }
-      end
+      let(:event_attributes) { attributes_for(:complete_event) }
+      let(:event_payload) { JSON.dump([event_attributes]) }
+
       it 'adds the correct Event into the database' do
         expect { result }.to change { Event.count }.by 1
 
         stored_attributes = Event.last.attributes.to_options
-        prepared_payload.each do |key, value|
+        event_attributes.each do |key, value|
           expect(value).to eq(stored_attributes[key])
         end
       end
     end
 
     context 'when there is an erroring event' do
-      let(:event_payload) { JSON.dump([{"test" => "hash"},{"test" => "hash"},{"test" => "hash"}]) }
-      let(:prepared_payload) do 
-        {
-          event_id:            123,
-          event_type:          "classification",
-          event_source:        "Panoptes",
-          event_time:          DateTime.parse('2018-11-06 05:45:09'),
-          project_id:          456,
-          workflow_id:         789,
-          user_id:             1011,
-          data:                {"metadata" => 'test'},
-          session_time:        5.0
-        }
-      end
-      let(:prepared_payload_1) do 
-        prepared_payload.merge({
-          event_id:            456
-        })
-      end
-      let(:prepared_payload_2) do 
-        prepared_payload.merge({
-          event_id:            789,
-          event_source:        nil
-        })
-      end
+      let(:event_1) { attributes_for(:complete_event) }
+      let(:event_2) { attributes_for(:complete_event) }
+      let(:event_3) { attributes_for(:complete_event, event_source: nil) }
+      let(:event_payload) { JSON.dump([event_1, event_2, event_3]) }
+
       it 'reverts the batch and returns the error' do
         expect { result }.not_to change { Event.count }
         expect(result["errors"][0]["message"]).to eq("Validation failed: Event source can't be blank")
@@ -100,28 +62,27 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'when there is a repeated event' do
-      let(:event_payload) { JSON.dump([{"test" => "hash"},{"test" => "hash"}]) }
-      let(:prepared_payload) do 
-        {
-          event_id:            123,
-          event_type:          "classification",
-          event_source:        "Panoptes",
-          event_time:          DateTime.parse('2018-11-06 05:45:09'),
-          project_id:          456,
-          workflow_id:         789,
-          user_id:             1011,
-          data:                {"metadata" => 'test'},
-          session_time:        5.0
-        }
-      end
-      let(:prepared_payload_1) do 
-        prepared_payload
-      end
+      let(:event_attributes) { attributes_for(:complete_event) }
+      let(:event_payload) { JSON.dump([event_attributes, event_attributes]) }
+
       it 'add only one row to the database without errors' do
         expect { result }.to change { Event.count }.by 1
         errors = result["data"]["createEvent"]["errors"][0]
         expect(errors).to be_nil
       end
+    end
+  end
+end
+
+module Transformers
+  class TransformerDouble
+    attr_accessor :payload
+    def initialize(payload)
+      @payload = payload
+    end
+
+    def transform
+      payload
     end
   end
 end

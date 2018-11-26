@@ -23,7 +23,7 @@ module Transformers
     private
     def remaining_data
       {
-        subject_ids:         subject_ids,
+        subject_id:         subject_id,
         created_at:          created_at,
         updated_at:          updated_at,
         workflow_version:    workflow_version,
@@ -67,7 +67,7 @@ module Transformers
       payload.dig("data", "links", "user")
     end
 
-    def subject_ids
+    def subject_id
       payload.dig("data", "links", "subjects").first
     end
 

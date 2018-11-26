@@ -22,8 +22,7 @@ module Mutations
       # the schema conformance here
       # return unless model.type && model.source == panoptes classificaiton
       event_json.each do |event|
-        transformer = Transformers.for(event)
-        prepared_payload = transformer.transform
+        prepared_payload = Transformers.for(event).transform
         events_list.append(Event.new(prepared_payload))
       end
 

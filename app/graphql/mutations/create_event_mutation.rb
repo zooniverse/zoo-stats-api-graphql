@@ -23,7 +23,7 @@ module Mutations
       # return unless model.type && model.source == panoptes classificaiton
       event_json.each do |event|
         transformer = Transformers.for(event)
-        prepared_payload = transformer.new(event).transform
+        prepared_payload = transformer.transform
         events_list.append(Event.new(prepared_payload))
       end
 

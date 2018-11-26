@@ -17,7 +17,7 @@ Rspec.describe ZooStatsSchema do
   end
     
   before do
-    allow(Transformers).to receive(:for).and_return(Transformers::TransformerDouble)
+    allow(Transformers).to receive(:for) { |event| (Transformers::TransformerDouble.new(event)) }
   end
 
   describe 'createEvent' do

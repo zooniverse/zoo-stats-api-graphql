@@ -1,5 +1,5 @@
 Rspec.describe Transformers::PanoptesClassification do
-  subject(:panoptes_classification_transformer) { Transformers::PanoptesClassification }
+  subject(:panoptes_classification_transformer) { Transformers::PanoptesClassification.new(payload) }
 
   let(:event_id) { "18521902" }
   let(:event_type) { "classification" }
@@ -161,7 +161,7 @@ Rspec.describe Transformers::PanoptesClassification do
   end
 
   it 'returns a hash with expected data' do
-    transformed_payload = panoptes_classification_transformer.new(payload).transform
+    transformed_payload = panoptes_classification_transformer.transform
     expect(transformed_payload).to eq(expected_result)
   end
 end

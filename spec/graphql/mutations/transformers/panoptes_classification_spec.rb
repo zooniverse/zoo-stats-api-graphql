@@ -12,6 +12,7 @@ Rspec.describe Transformers::PanoptesClassification do
   let(:subject_ids) { ["3069945"] }
   let(:created_at) { "2016-10-10T12:59:48.233Z" }
   let(:updated_at) { "2016-10-10T12:59:48.293Z" }
+  let(:user_ip) { "127.0.0.1" }
   let(:workflow_version) { "2.5" }
   let(:gold_standard) { nil }
   let(:expert_classifier) { nil }
@@ -31,7 +32,7 @@ Rspec.describe Transformers::PanoptesClassification do
         "id" => event_id,
         "created_at" => created_at,
         "updated_at" => updated_at,
-        "user_ip" => "127.0.0.1",
+        "user_ip" => user_ip,
         "workflow_version" => workflow_version,
         "gold_standard" =>  gold_standard,
         "expert_classifier" =>  expert_classifier,
@@ -145,6 +146,7 @@ Rspec.describe Transformers::PanoptesClassification do
     }
   end
   let(:expected_session_time) { 2.0 }
+  let(:geo_location) { "UK" }
 
   let(:expected_result) do 
     {
@@ -156,8 +158,13 @@ Rspec.describe Transformers::PanoptesClassification do
       workflow_id:     workflow_id,
       user_id:         user_id,
       data:            expected_data,
-      session_time:    expected_session_time
+      session_time:    expected_session_time,
+      geo:             geo_location
     }
+  end
+
+  before do
+    allow(Geo).to receive(:locate).with(user_ip).and_return(geo_location)
   end
 
   it 'returns a hash with expected data' do

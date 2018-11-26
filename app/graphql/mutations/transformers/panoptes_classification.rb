@@ -1,3 +1,5 @@
+require_relative '../geo'
+
 module Transformers
   class PanoptesClassification
     attr_accessor :payload
@@ -16,7 +18,8 @@ module Transformers
         workflow_id:     workflow,
         user_id:         user,
         data:            remaining_data,
-        session_time:    session_time
+        session_time:    session_time,
+        geo:             geo
       }
     end
 
@@ -120,6 +123,10 @@ module Transformers
     def session_time
       diff = finished_at.to_i - started_at.to_i
       diff.to_f
+    end
+
+    def geo
+      Geo.locate(payload.dig("data", "user_ip"))
     end
   end
 end

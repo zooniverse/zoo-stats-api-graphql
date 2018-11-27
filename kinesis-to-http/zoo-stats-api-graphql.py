@@ -15,9 +15,8 @@ def lambda_handler(event, context):
   dicts    = [payload for payload in payloads if should_send(payload)]
 
   if dicts:
-    data = json.dumps({"payload": dicts})
-    graphql = { "query": MUTATION, "variables": {"graphql_payload": data} }
-    r = requests.post(ENDPOINT, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS, data=graphql)
+    mutation_request = json.dumps({ "query": MUTATION, "variables": {"graphql_payload": {"payload": dicts}} })
+    r = requests.post(ENDPOINT, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS, data=mutation_request)
     r.raise_for_status()
 
 def should_send(payload):

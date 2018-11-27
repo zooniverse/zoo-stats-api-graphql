@@ -5,9 +5,9 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 HEADERS  = {"Content-Type": "application/json", "Accept": "application/json"}
-ENDPOINT = os.environ["KINESIS_STREAM_ENDPOINT"]  # "https://caesar-staging.zooniverse.org/kinesis"
-USERNAME = os.environ["KINESIS_STREAM_USERNAME"]
-PASSWORD = os.environ["KINESIS_STREAM_PASSWORD"]
+ENDPOINT = os.environ["GRAPHQL_ENDPOINT"]  # "https://stats.zooniverse.org/graphql"
+USERNAME = os.environ["GRAPHQL_MUTATION_USERNAME"]
+PASSWORD = os.environ["GRAPHQL_MUTATION_PASSWORD"]
 MUTATION = "mutation ($graphql_payload: String!){ createEvent(eventPayload: $graphql_payload){ errors } }"
 
 def lambda_handler(event, context):

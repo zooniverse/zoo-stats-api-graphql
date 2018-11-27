@@ -2,12 +2,6 @@ RSpec.describe Types::QueryType do
   subject { Types::QueryType }
 
   {
-    'userIdQuery'         => ['[Event!]!', {
-      'userId'            => 'ID!'
-    }],
-    'projectIdQuery'      => ['[Event!]!', {
-      'projectId'         => 'ID!'
-    }],
     'userStatsCount'     => ['[Event!]!', {
       'userId'            => 'ID!',
       'eventType'         => 'String!',

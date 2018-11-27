@@ -117,40 +117,6 @@ Rspec.shared_examples 'an authorizing user query' do |query_name, query_string, 
 end
 
 Rspec.describe ZooStatsSchema do
-  describe 'userIdQuery' do
-    query_name = 'userIdQuery'
-    users_id = 123
-    wrong_user = 456
-    query_string = "{
-      userIdQuery(userId: #{users_id}){
-        userId
-      }
-      }"
-      output = [
-        {"userId"=>"123"},
-        {"userId"=>"123"},
-        {"userId"=>"123"}
-      ]
-      it_behaves_like 'an authorizing user query', query_name, query_string, users_id, wrong_user
-      it_behaves_like 'a graphQL query', query_name, query_string, output, users_id
-  end
-    
-  describe 'projectIdQuery' do
-    query_name = 'projectIdQuery'
-    projects_id = 456
-    query_string = "{
-      projectIdQuery(projectId: #{projects_id}){
-        projectId
-      }
-      }"
-      output = [
-        {"projectId"=>"456"},
-        {"projectId"=>"456"},
-        {"projectId"=>"456"}
-      ]
-      it_behaves_like 'a graphQL query', query_name, query_string, output, 0
-  end
-      
   describe 'userStatsCount' do
     query_name = 'userStatsCount'
     user_id = 123

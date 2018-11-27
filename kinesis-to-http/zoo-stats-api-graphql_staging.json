@@ -15,7 +15,8 @@
   "subscription": {
     "kinesis": {
       "stream": "arn:aws:kinesis:us-east-1:927935712646:stream/zooniverse-staging",
-      "batch_size": 100
+      "batch_size": 100,
+      "starting_position": "LATEST"
     }
   }
 }

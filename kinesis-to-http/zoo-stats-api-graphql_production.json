@@ -11,5 +11,11 @@
     "/*.pyc"
   ],
   "timeout": 30,
-  "memory": 128
+  "memory": 128,
+  "subscription": {
+    "kinesis": {
+      "stream": "arn:aws:kinesis:us-east-1:927935712646:stream/zooniverse-production",
+      "batch_size": 100
+    }
+  }
 }

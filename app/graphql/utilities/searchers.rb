@@ -1,10 +1,4 @@
 module Searchers
-  class Complete
-    def search(kwargs)
-      Event.where(**kwargs)
-    end
-  end
-
   class Bucket
     def search(kwargs)
       time_bucket = kwargs.delete(:interval)

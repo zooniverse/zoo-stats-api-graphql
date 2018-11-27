@@ -5,9 +5,9 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 HEADERS  = {"Content-Type": "application/json", "Accept": "application/json"}
-ENDPOINT = os.environ["KINESIS_STREAM_ENDPOINT"]  # "https://caesar-staging.zooniverse.org/kinesis"
-USERNAME = os.environ["KINESIS_STREAM_USERNAME"]
-PASSWORD = os.environ["KINESIS_STREAM_PASSWORD"]
+ENDPOINT = os.environ["GRAPHQL_ENDPOINT"]  # "https://stats.zooniverse.org/graphql"
+USERNAME = os.environ["GRAPHQL_MUTATION_USERNAME"]
+PASSWORD = os.environ["GRAPHQL_MUTATION_PASSWORD"]
 MUTATION = "mutation ($graphql_payload: String!){ createEvent(eventPayload: $graphql_payload){ errors } }"
 
 def lambda_handler(event, context):
@@ -15,9 +15,8 @@ def lambda_handler(event, context):
   dicts    = [payload for payload in payloads if should_send(payload)]
 
   if dicts:
-    data = json.dumps({"payload": dicts})
-    graphql = { "query": MUTATION, "variables": {"graphql_payload": data} }
-    r = requests.post(ENDPOINT, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS, data=graphql)
+    mutation_request = { "query": MUTATION, "variables": {"graphql_payload": json.dumps(dicts)} }
+    r = requests.post(ENDPOINT, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS, json=mutation_request)
     r.raise_for_status()
 
 def should_send(payload):

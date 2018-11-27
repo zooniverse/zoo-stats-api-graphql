@@ -1,5 +1,5 @@
 RSpec.describe Searchers do
-  subject(:bucket_searcher) { Searchers::Bucket.new }
+  subject(:bucket_searcher) { Searchers::Bucket }
 
   describe 'bucketing events for a specific :userId or :projectId with a specific event_type' do
     let(:users_id) { 123 }

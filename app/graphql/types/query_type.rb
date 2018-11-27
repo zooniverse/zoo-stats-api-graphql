@@ -13,7 +13,7 @@ module Types
 
     def user_stats_count(kwargs, searcher=Searchers::Bucket)
       if user_permission?(kwargs[:user_id])
-        searcher.new.search(**kwargs)
+        searcher.search(**kwargs)
       else
         raise GraphQL::ExecutionError, "Permission denied"
       end
@@ -27,7 +27,7 @@ module Types
     end
 
     def project_stats_count(kwargs, searcher=Searchers::Bucket)
-      searcher.new.search(**kwargs)
+      searcher.search(**kwargs)
     end
 
     private

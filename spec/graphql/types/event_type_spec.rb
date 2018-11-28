@@ -5,7 +5,6 @@ RSpec.describe Types::EventType do
     'eventId'            => 'ID!',
     'eventType'          => 'String!',
     'eventTime'          => 'ISO8601DateTime!',
-    'eventCreatedAt'     => 'ISO8601DateTime',
     'eventSource'        => 'String!',
     'sessionTime'        => 'Float',
     'userId'             => 'ID',

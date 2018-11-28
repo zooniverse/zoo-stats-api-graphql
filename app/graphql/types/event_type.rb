@@ -7,8 +7,6 @@ module Types
     description: "Type of event (classification, comment, ...)"
     field :event_time, GraphQL::Types::ISO8601DateTime, null: false,
     description: "Timestamp of event"
-    field :event_created_at, GraphQL::Types::ISO8601DateTime, null: true,
-    description: "Time database entry created"
     field :event_source, String, null: false,
     description: "Source of event"
     field :session_time, Float, null: true,

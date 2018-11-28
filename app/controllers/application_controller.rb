@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include ActionController::HttpAuthentication::Basic
+  
   def health
     database_status = ActiveRecord::Base.connection.execute("SELECT 1 FROM events")
     render json: {status: "ok", version: VERSION, database_status: "connected", commit_id: fetch_commit_id}.to_json

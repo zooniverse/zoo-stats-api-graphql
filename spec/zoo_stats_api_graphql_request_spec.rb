@@ -57,4 +57,43 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
       end
     end
   end
+
+  context 'with HTTP basic authentication' do
+    let(:username) { "user" }
+    let(:password) { "secret" }
+    let(:headers) do
+      {'HTTP_AUTHORIZATION' => ActionController::HttpAuthentication::Basic.encode_credentials(username, password)}
+    end
+    
+    before do
+      allow(ZooStatsSchema).to receive(:execute) { |query, params| params }
+    end
+    
+    describe 'graphql' do
+      let(:params) do
+        {
+          query: 'Graphql query',
+          operation_name: nil
+        }
+      end
+
+      context 'with no token' do
+        it 'should set context :user_id and :admin to nil without auth headers' do
+          post '/graphql', params: params
+          context_param = JSON.parse(response.body)["context"]
+          expect(context_param["basic_user"]).to be_nil
+          expect(context_param["basic_password"]).to be_nil
+        end
+      end
+
+      context 'with correct token' do
+        it 'should set correct context from auth header' do
+          post '/graphql', params: params, headers: headers
+          context_param = JSON.parse(response.body)["context"]
+          expect(context_param["basic_user"]).to eq(username)
+          expect(context_param["basic_password"]).to eq(password)
+        end
+      end
+    end
+  end
 end

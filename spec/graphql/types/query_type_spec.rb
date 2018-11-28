@@ -2,22 +2,13 @@ RSpec.describe Types::QueryType do
   subject { Types::QueryType }
 
   {
-    'userIdQuery'         => ['[Event!]!', {
-      'userId'            => 'ID!'
+    'statsCount'        => ['[Event!]!', {
+      'interval'        => 'String!',
+      'eventType'       => 'String!',
+      'userId'          => 'ID',
+      'projectId'       => 'ID',
+      'workflowId'      => 'ID'
     }],
-    'projectIdQuery'      => ['[Event!]!', {
-      'projectId'         => 'ID!'
-    }],
-    'userStatsCount'     => ['[Event!]!', {
-      'userId'            => 'ID!',
-      'eventType'         => 'String!',
-      'interval'        => 'String!'
-    }],
-    'projectStatsCount'  => ['[Event!]!', {
-      'projectId'            => 'ID!',
-      'eventType'         => 'String!',
-      'interval'        => 'String!'
-    }]
   }.each do |field_name, expected_results|
     (expected_field_type, expected_arguments) = expected_results
     it 'matches field descriptions' do

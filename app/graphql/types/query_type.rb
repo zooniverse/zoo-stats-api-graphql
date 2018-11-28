@@ -4,58 +4,62 @@ module Types
   class QueryType < Types::BaseObject
     description 'The query root of this schema'
 
-    field :user_id_query, [Types::EventType], null: false do
-      description 'returns all events with user_id'
-      argument :userId, ID, required: true
+    field :stats_count, [Types::EventType], null: false do
+      description 'returns counts of event types grouped by interval (e.g. "1 day") with optional filtering by user, project and workflow ids'
+      argument :interval, String, required: true
+      argument :event_type, String, required: true
+      argument :user_id, ID, required: false
+      argument :project_id, ID, required: false
+      argument :workflow_id, ID, required: false
     end
 
-    def user_id_query(kwargs, searcher=Searchers::Complete)
-      if user_permission?(kwargs[:user_id])
-        searcher.new.search(**kwargs)
+    def stats_count(query_filters, searcher=Searchers::Bucket)
+      if Authorizer.new(query_filters, context).allowed?
+        searcher.search(**query_filters)
       else
         raise GraphQL::ExecutionError, "Permission denied"
       end
-    end
-
-    field :project_id_query, [Types::EventType], null: false do
-      description 'returns all events with project_id'
-      argument :project_id, ID, required: true
-    end
-
-    def project_id_query(kwargs, searcher=Searchers::Complete)
-      searcher.new.search(**kwargs)
-    end
-
-    field :user_stats_count, [Types::EventType], null: false do
-      description 'returns counts of events by user in category grouped into period with length of interval (i.e. "1 day")'
-      argument :user_id, ID, required: true
-      argument :event_type, String, required: true
-      argument :interval, String, required: true
-    end
-
-    def user_stats_count(kwargs, searcher=Searchers::Bucket)
-      if user_permission?(kwargs[:user_id])
-        searcher.new.search(**kwargs)
-      else
-        raise GraphQL::ExecutionError, "Permission denied"
-      end
-    end
-
-    field :project_stats_count, [Types::EventType], null: false do
-      description 'returns counts of events by project in category grouped into period with length of interval (i.e. "1 day")'
-      argument :project_id, ID, required: true
-      argument :event_type, String, required: true
-      argument :interval, String, required: true
-    end
-
-    def project_stats_count(kwargs, searcher=Searchers::Bucket)
-      searcher.new.search(**kwargs)
     end
 
     private
 
-    def user_permission?(query_id)
-      context[:admin] || context[:current_user].to_s == query_id
+    class Authorizer
+      attr_reader :query_filter_keys, :user_id_filter, :logged_in_user_id, :logged_in_admin_user
+      SITE_WIDE_FILTERS = %i(user_id workflow_id project_id).freeze
+
+      def initialize(query_filters, context)
+        @query_filter_keys = query_filters.keys
+        @user_id_filter = query_filters[:user_id]
+        @logged_in_user_id = context[:current_user]&.to_s
+        @logged_in_admin_user = context.fetch(:admin, false)
+      end
+
+      def allowed?
+        return true if logged_in_admin_user
+
+        return false if site_wide_search?
+
+        return false if user_filter_differs_to_logged_in_user?
+
+        # filters conform to rules let it through
+        true
+      end
+
+      private
+
+      # non-admins must filter on at least one filter key
+      def site_wide_search?
+        (SITE_WIDE_FILTERS & query_filter_keys).empty?
+      end
+
+      # all filtering on user_id must be for the logged in user
+      def user_filter_differs_to_logged_in_user?
+        if user_id_filter
+          logged_in_user_id != user_id_filter
+        else
+          false
+        end
+      end
     end
   end
 end

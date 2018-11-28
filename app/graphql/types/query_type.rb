@@ -14,24 +14,29 @@ module Types
     end
 
     def stats_count(kwargs, searcher=Searchers::Bucket)
-      if site_wide_search?(kwargs) && (not context[:admin])
+      if site_wide_search_and_not_admin?(kwargs) || user_search_and_not_user?(kwargs[:user_id])
         raise GraphQL::ExecutionError, "Permission denied"
-      end
-      if (not kwargs[:user_id]) || user_permission?(kwargs[:user_id])
-        searcher.search(**kwargs)
       else
-        raise GraphQL::ExecutionError, "Permission denied"
+        searcher.search(**kwargs)
       end
     end
 
     private
 
-    def user_permission?(query_id)
-      context[:admin] || context[:current_user].to_s == query_id
+    def site_wide_search_and_not_admin?(arguments)
+      site_wide_search?(arguments) && (not context[:admin])
     end
-
+    
     def site_wide_search?(arguments)
       not (arguments[:user_id] || arguments[:project_id] || arguments[:workflow_id])
+    end
+
+    def user_search_and_not_user?(query_id)
+      query_id && (not user_permission?(query_id))
+    end
+
+    def user_permission?(query_id)
+      context[:admin] || context[:current_user].to_s == query_id
     end
   end
 end

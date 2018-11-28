@@ -1,5 +1,3 @@
-require_relative '../geo'
-
 module Transformers
   class PanoptesClassification
     attr_accessor :payload

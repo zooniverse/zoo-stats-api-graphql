@@ -32,7 +32,6 @@ class Generator
         'event_type':           event_type,
         'event_source':         "Panoptes",
         'event_time':           time_stamp,
-        'event_created_at':     time_stamp,
         'project_id':           rand(1..PROJECT_ID_MAX),
         'workflow_id':          rand(1..WORKFLOW_ID_MAX),
         'user_id':              user_id_options[rand(0..NIL_USER_TO_LOGGED_IN_RATIO)],

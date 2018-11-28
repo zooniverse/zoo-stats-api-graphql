@@ -1,5 +1,10 @@
 Rspec.describe ZooStatsSchema do
-  let(:context) { {} }
+  let(:context) do
+    {
+      basic_user:     "user",
+      basic_password: "secret"
+    }
+  end
   let(:variables) { {"event_payload": event_payload} }
   let(:mutation_string) do
     "mutation ($event_payload: String!){
@@ -17,6 +22,8 @@ Rspec.describe ZooStatsSchema do
   end
     
   before do
+    allow(Rails.application.credentials).to receive(:mutation_username_staging).and_return("user")
+    allow(Rails.application.credentials).to receive(:mutation_password_staging).and_return("secret")
     allow(Transformers).to receive(:for) { |event| (Transformers::TransformerDouble.new(event)) }
   end
 
@@ -70,6 +77,53 @@ Rspec.describe ZooStatsSchema do
         expect { result }.to change { Event.count }.by 1
         errors = result["data"]["createEvent"]["errors"][0]
         expect(errors).to be_nil
+      end
+    end
+
+    context 'authentication and authorization' do
+      let(:event_attributes) { attributes_for(:complete_event) }
+      let(:event_payload) { JSON.dump([event_attributes]) }
+
+      context 'when there is no basic authentication' do
+        let(:context) do
+          {
+            basic_user:     nil,
+            basic_password: nil
+          }
+        end
+
+        it 'returns unauthorized' do
+          expect { result }.not_to change { Event.count }
+          expect(result["errors"].first["message"]).to eq("Unauthorized")
+        end
+      end
+
+      context 'when the user is wrong' do
+        let(:context) do
+          {
+            basic_user: "wrong_user",
+            basic_password: "secret"
+          }
+        end
+
+        it 'returns permission denied' do
+          expect { result }.not_to change { Event.count }
+          expect(result["errors"].first["message"]).to eq("Permission denied")
+        end
+      end
+
+      context 'when the password is incorrect' do
+        let(:context) do
+          {
+            basic_user: "user",
+            basic_password: "not_so_secret"
+          }
+        end
+
+        it 'returns permission denied' do
+          expect { result }.not_to change { Event.count }
+          expect(result["errors"].first["message"]).to eq("Permission denied")
+        end
       end
     end
   end

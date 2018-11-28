@@ -41,12 +41,12 @@ class GraphqlController < ApplicationController
   def setup_and_validate_credential
     authorization = request.headers['HTTP_AUTHORIZATION']
     
-    if match = /\ABearer (.*)\Z/.match(authorization)
+    if match = /\ABearer (.*)\z/.match(authorization)
       auth = match[1]
       temp = Credential.new(auth)
       @credential = temp if temp.ok?
     end
-    if match = /\ABasic (.*)\Z/.match(authorization)
+    if match = /\ABasic (.*)\z/.match(authorization)
       @basic_credential = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
     end
   end

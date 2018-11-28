@@ -18,7 +18,6 @@ module Types
         searcher.search(**query_filters)
       else
         raise GraphQL::ExecutionError, "Permission denied"
-
       end
     end
 

@@ -14,8 +14,8 @@ RSpec.describe Types::EventType do
     'countryName'       => 'String',
     'countryCode'       => 'String',
     'cityName'          => 'String',
-    'latitude'           => 'Int',
-    'longitude'          => 'Int',
+    'latitude'           => 'Float',
+    'longitude'          => 'Float',
     'period'             => 'ISO8601DateTime',
     'count'              => 'Int',
   }.each do |field_name, expected_field_type|

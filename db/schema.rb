@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_28_112032) do
+ActiveRecord::Schema.define(version: 2018_11_28_114907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,8 +31,8 @@ ActiveRecord::Schema.define(version: 2018_11_28_112032) do
     t.string "country_name"
     t.string "country_code"
     t.string "city_name"
-    t.integer "latitude"
-    t.integer "longitude"
+    t.decimal "latitude"
+    t.decimal "longitude"
     t.index ["event_time"], name: "events_event_time_idx", order: :desc
     t.index ["event_type", "project_id"], name: "index_events_on_event_type_and_project_id"
     t.index ["event_type", "user_id"], name: "index_events_on_event_type_and_user_id"

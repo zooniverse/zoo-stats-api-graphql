@@ -25,9 +25,9 @@ module Types
     description: "User country code"
     field :city_name, String, null: true,
     description: "User city name"
-    field :latitude, Int, null: true,
+    field :latitude, Float, null: true,
     description: "User latitude"
-    field :longitude, Int, null: true,
+    field :longitude, Float, null: true,
     description: "User longitude"
     field :period, GraphQL::Types::ISO8601DateTime, null: true,
     description: "Output time slot"

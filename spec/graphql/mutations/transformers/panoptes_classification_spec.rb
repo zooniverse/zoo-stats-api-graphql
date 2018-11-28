@@ -151,8 +151,8 @@ Rspec.describe Transformers::PanoptesClassification do
       country_name: "United Kingdom",
       country_code: "UK",
       city_name:    "Oxford",
-      latitude:     100,
-      longitude:    -100
+      latitude:     100.1,
+      longitude:    -100.1
     }
   end
 

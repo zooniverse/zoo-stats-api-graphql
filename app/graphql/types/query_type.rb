@@ -13,30 +13,54 @@ module Types
       argument :workflow_id, ID, required: false
     end
 
-    def stats_count(kwargs, searcher=Searchers::Bucket)
-      if site_wide_search_and_not_admin?(kwargs) || user_search_and_not_user?(kwargs[:user_id])
-        raise GraphQL::ExecutionError, "Permission denied"
+    def stats_count(query_filters, searcher=Searchers::Bucket)
+      if Authorizer.new(query_filters, context).allowed?
+        searcher.search(**query_filters)
       else
-        searcher.search(**kwargs)
+        raise GraphQL::ExecutionError, "Permission denied"
+
       end
     end
 
     private
 
-    def site_wide_search_and_not_admin?(arguments)
-      site_wide_search?(arguments) && (not context[:admin])
-    end
-    
-    def site_wide_search?(arguments)
-      not (arguments[:user_id] || arguments[:project_id] || arguments[:workflow_id])
-    end
+    class Authorizer
+      attr_reader :query_filter_keys, :user_id_filter, :logged_in_user_id, :logged_in_admin_user
+      SITE_WIDE_FILTERS = %i(user_id workflow_id project_id).freeze
 
-    def user_search_and_not_user?(query_id)
-      query_id && (not user_permission?(query_id))
-    end
+      def initialize(query_filters, context)
+        @query_filter_keys = query_filters.keys
+        @user_id_filter = query_filters[:user_id]
+        @logged_in_user_id = context[:current_user]&.to_s
+        @logged_in_admin_user = context.fetch(:admin, false)
+      end
 
-    def user_permission?(query_id)
-      context[:admin] || context[:current_user].to_s == query_id
+      def allowed?
+        return true if logged_in_admin_user
+
+        return false if site_wide_search?
+
+        return false if user_filter_differs_to_logged_in_user?
+
+        # filters conform to rules let it through
+        true
+      end
+
+      private
+
+      # non-admins must filter on at least one filter key
+      def site_wide_search?
+        (SITE_WIDE_FILTERS & query_filter_keys).empty?
+      end
+
+      # all filtering on user_id must be for the logged in user
+      def user_filter_differs_to_logged_in_user?
+        if user_id_filter
+          logged_in_user_id != user_id_filter
+        else
+          false
+        end
+      end
     end
   end
 end

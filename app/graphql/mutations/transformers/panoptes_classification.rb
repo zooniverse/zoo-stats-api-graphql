@@ -128,7 +128,7 @@ module Transformers
     end
 
     def geo
-      Geo.locate(payload.dig("data", "user_ip"))
+      @geo ||= Geo.locate(payload.dig("data", "user_ip"))
     end
 
     def country_name

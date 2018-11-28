@@ -66,7 +66,6 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
     end
     
     before do
-      #allow(ActionController::HttpAuthentication::Basic).to receive(:user_name_and_password).and_return(credential)
       allow(ZooStatsSchema).to receive(:execute) { |query, params| params }
     end
     

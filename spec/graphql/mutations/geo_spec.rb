@@ -33,7 +33,6 @@ RSpec.describe Geo do
           country_name: country,
           country_code: country_code,
           city_name:    city,
-          coordinates:  [longitude, latitude],
           latitude:     latitude,
           longitude:    longitude
         }

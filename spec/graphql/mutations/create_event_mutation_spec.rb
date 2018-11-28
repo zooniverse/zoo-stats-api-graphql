@@ -47,6 +47,11 @@ Rspec.describe ZooStatsSchema do
           expect(value).to eq(stored_attributes[key])
         end
         expect(stored_attributes[:session_time]).to eq(1.0)
+        expect(stored_attributes[:country_name]).to eq("United Kingdom")
+        expect(stored_attributes[:country_code]).to eq("UK")
+        expect(stored_attributes[:city_name]).to eq("Oxford")
+        expect(stored_attributes[:latitude]).to eq(100)
+        expect(stored_attributes[:longitude]).to eq(-100)
       end
     end
 
@@ -84,6 +89,11 @@ module Transformers
 
     def transform
       payload["session_time"] = 1.0
+      payload["country_name"] = "United Kingdom"
+      payload["country_code"] = "UK"
+      payload["city_name"]    = "Oxford"
+      payload["latitude"]     = 100
+      payload["longitude"]    = -100
       payload
     end
   end

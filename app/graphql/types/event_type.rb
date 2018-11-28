@@ -1,7 +1,6 @@
 module Types
   class EventType < GraphQL::Schema::Object
     description 'The Event type'
-    # event specific fields
     field :event_id, ID, null: false,
     description: "Event ID"
     field :event_type, String, null: false,
@@ -22,10 +21,16 @@ module Types
     description: "Workflow ID under project"
     field :data, String, null: true,
     description: "Extra event metadata"
-    field :geo, String, null: true,
-    description: "Geo location data"
-
-    # output fields
+    field :country_name, String, null: true,
+    description: "User country name"
+    field :country_code, String, null: true,
+    description: "User country code"
+    field :city_name, String, null: true,
+    description: "User city name"
+    field :latitude, Int, null: true,
+    description: "User latitude"
+    field :longitude, Int, null: true,
+    description: "User longitude"
     field :period, GraphQL::Types::ISO8601DateTime, null: true,
     description: "Output time slot"
     field :count, Int, null: true,

@@ -9,7 +9,6 @@ module Geo
         country_name: match.country,
         country_code: match.country_code,
         city_name: match.city,
-        coordinates: [match.longitude, match.latitude],
         latitude: match.latitude,
         longitude: match.longitude
       }

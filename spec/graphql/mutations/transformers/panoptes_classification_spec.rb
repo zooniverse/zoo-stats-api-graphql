@@ -146,7 +146,15 @@ Rspec.describe Transformers::PanoptesClassification do
     }
   end
   let(:expected_session_time) { 2.0 }
-  let(:geo_location) { "UK" }
+  let(:geo_data) do
+    {
+      country_name: "United Kingdom",
+      country_code: "UK",
+      city_name:    "Oxford",
+      latitude:     100,
+      longitude:    -100
+    }
+  end
 
   let(:expected_result) do 
     {
@@ -159,12 +167,16 @@ Rspec.describe Transformers::PanoptesClassification do
       user_id:         user_id,
       data:            expected_data,
       session_time:    expected_session_time,
-      geo:             geo_location
+      country_name:    geo_data[:country_name],
+      country_code:    geo_data[:country_code],
+      city_name:       geo_data[:city_name],
+      latitude:        geo_data[:latitude],
+      longitude:       geo_data[:longitude]
     }
   end
 
   before do
-    allow(Geo).to receive(:locate).with(user_ip).and_return(geo_location)
+    allow(Geo).to receive(:locate).with(user_ip).and_return(geo_data)
   end
 
   it 'returns a hash with expected data' do

@@ -1,7 +1,6 @@
 RSpec.describe Types::EventType do
   subject { Types::EventType }
 
-  # 'fieldName'          => 'Field_type'
   { 
     'eventId'            => 'ID!',
     'eventType'          => 'String!',
@@ -13,9 +12,11 @@ RSpec.describe Types::EventType do
     'projectId'          => 'ID',
     'workflowId'         => 'ID',
     'data'               => 'String',
-    'geo'                => 'String',
-
-    # output fields
+    'countryName'       => 'String',
+    'countryCode'       => 'String',
+    'cityName'          => 'String',
+    'latitude'           => 'Int',
+    'longitude'          => 'Int',
     'period'             => 'ISO8601DateTime',
     'count'              => 'Int',
   }.each do |field_name, expected_field_type|

@@ -19,7 +19,11 @@ module Transformers
         user_id:         user,
         data:            remaining_data,
         session_time:    session_time,
-        geo:             geo
+        country_name:    country_name,
+        country_code:    country_code,
+        city_name:       city_name,
+        latitude:        latitude,
+        longitude:       longitude
       }
     end
 
@@ -127,6 +131,26 @@ module Transformers
 
     def geo
       Geo.locate(payload.dig("data", "user_ip"))
+    end
+
+    def country_name
+      geo[:country_name]
+    end
+
+    def country_code
+      geo[:country_code]
+    end
+
+    def city_name
+      geo[:city_name]
+    end
+
+    def latitude
+      geo[:latitude]
+    end
+
+    def longitude
+      geo[:longitude]
     end
   end
 end

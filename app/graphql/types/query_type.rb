@@ -5,7 +5,7 @@ module Types
     description 'The query root of this schema'
 
     field :stats_count, [Types::EventType], null: false do
-      description 'returns counts of events in category grouped into period with length of interval (i.e. "1 day")'
+      description 'returns counts of event types grouped by interval (e.g. "1 day") with optional filtering by user, project and workflow ids'
       argument :interval, String, required: true
       argument :event_type, String, required: true
       argument :user_id, ID, required: false

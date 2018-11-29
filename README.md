@@ -29,9 +29,6 @@
 
 0. Open up the application in your browser at http://localhost:3000
 
-0. Seed development database
-    * Run: `docker-compose run --rm --entrypoint="bundle exec rake db:seed" zoo_stats`
-
 Once all the above steps complete you will have a working copy of the checked out code base. Keep your code up to date and rebuild the image on any code or configuration changes.
 
 #### Testing

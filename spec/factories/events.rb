@@ -9,10 +9,10 @@ FactoryBot.define do
     sequence(:user_id)      { |n| "400#{n}".to_i }
     data                    { {"metadata" => "test"} }
     session_time            { rand(1.0..10.0) }
-    country_name "United Kingdom"
-    country_code "GB"
-    city_name "Oxford"
-    latitude 51.75222
-    longitude -1.25596
+    country_name { "United Kingdom" }
+    country_code { "GB" }
+    city_name { "Oxford" }
+    latitude { 51.75222 }
+    longitude { -1.25596 }
   end
 end

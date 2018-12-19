@@ -16,7 +16,7 @@ gem 'geocoder'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'pry-rails', '~> 0.3.7'
+  gem 'pry-rails', '~> 0.3.8'
   gem 'foreman'
 end
 

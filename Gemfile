@@ -9,7 +9,7 @@ gem 'graphql', '~> 1.8'
 gem 'composite_primary_keys', '~> 11.1'
 gem 'dotenv-rails'
 gem 'rollbar'
-gem 'panoptes-client', '~> 0.3.7'
+gem 'panoptes-client', '~> 0.3.8'
 gem 'active_record_upsert'
 gem 'geocoder'
 

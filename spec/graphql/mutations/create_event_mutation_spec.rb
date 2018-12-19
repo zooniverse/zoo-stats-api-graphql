@@ -20,11 +20,13 @@ Rspec.describe ZooStatsSchema do
       variables: variables
     )
   end
-    
+
   before do
     allow(Rails.application.credentials).to receive(:mutation_username_staging).and_return("user")
     allow(Rails.application.credentials).to receive(:mutation_password_staging).and_return("secret")
-    allow(Transformers).to receive(:for) { |event| (Transformers::TransformerDouble.new(event)) }
+    allow(Transformers).to receive(:for) do |event|
+      Transformers::TransformerDouble.new(event)
+    end
   end
 
   describe 'createEvent' do
@@ -43,29 +45,27 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'when there is a single event payload' do
-      let(:event_attributes) { attributes_for(:complete_event) }
+      let(:event_attributes) do
+        event_attrs = attributes_for(:event).with_indifferent_access
+        transformer_double = Transformers::TransformerDouble.new(event_attrs)
+        transformer_double.transform
+      end
       let(:event_payload) { JSON.dump([event_attributes]) }
 
       it 'adds the correct Event into the database' do
         expect { result }.to change { Event.count }.by 1
 
-        stored_attributes = Event.last.attributes.to_options
+        stored_attributes = Event.last.attributes
         event_attributes.each do |key, value|
           expect(value).to eq(stored_attributes[key])
         end
-        expect(stored_attributes[:session_time]).to eq(1.0)
-        expect(stored_attributes[:country_name]).to eq("United Kingdom")
-        expect(stored_attributes[:country_code]).to eq("UK")
-        expect(stored_attributes[:city_name]).to eq("Oxford")
-        expect(stored_attributes[:latitude]).to eq(100.1)
-        expect(stored_attributes[:longitude]).to eq(-100.1)
       end
     end
 
     context 'when there is an erroring event' do
-      let(:event_1) { attributes_for(:complete_event) }
-      let(:event_2) { attributes_for(:complete_event) }
-      let(:event_3) { attributes_for(:complete_event, event_source: nil) }
+      let(:event_1) { attributes_for(:event) }
+      let(:event_2) { attributes_for(:event) }
+      let(:event_3) { attributes_for(:event, event_source: nil) }
       let(:event_payload) { JSON.dump([event_1, event_2, event_3]) }
 
       it 'reverts the batch and returns the error' do
@@ -75,7 +75,7 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'when there is a repeated event' do
-      let(:event_attributes) { attributes_for(:complete_event) }
+      let(:event_attributes) { attributes_for(:event) }
       let(:event_payload) { JSON.dump([event_attributes, event_attributes]) }
 
       it 'add only one row to the database without errors' do
@@ -86,7 +86,7 @@ Rspec.describe ZooStatsSchema do
     end
 
     context 'authentication and authorization' do
-      let(:event_attributes) { attributes_for(:complete_event) }
+      let(:event_attributes) { attributes_for(:event) }
       let(:event_payload) { JSON.dump([event_attributes]) }
 
       context 'when there is no basic authentication' do
@@ -144,7 +144,7 @@ module Transformers
     def transform
       payload["session_time"] = 1.0
       payload["country_name"] = "United Kingdom"
-      payload["country_code"] = "UK"
+      payload["country_code"] = "GB"
       payload["city_name"]    = "Oxford"
       payload["latitude"]     = 100.1
       payload["longitude"]    = -100.1

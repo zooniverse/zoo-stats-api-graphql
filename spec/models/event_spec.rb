@@ -22,12 +22,14 @@ RSpec.describe Event, type: :model do
     end
 
     it 'has composite primary key' do
-      expect(Event.find([
+      event
+      pkey_find_attrs = [
         attributes[:event_id],
         attributes[:event_type],
         attributes[:event_source],
         attributes[:event_time]
-        ])).to eq(event)
+      ]
+      expect(Event.find(pkey_find_attrs)).to eq(event)
     end
   end
 

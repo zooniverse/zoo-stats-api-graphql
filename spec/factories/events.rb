@@ -8,7 +8,7 @@ FactoryBot.define do
     sequence(:workflow_id)  { |n| "300#{n}".to_i }
     sequence(:user_id)      { |n| "400#{n}".to_i }
     data                    { {"metadata" => "test"} }
-    session_time            { rand(1.0..10.0) }
+    session_time            { rand(1.0..10.0).round(3) }
     country_name { "United Kingdom" }
     country_code { "GB" }
     city_name { "Oxford" }

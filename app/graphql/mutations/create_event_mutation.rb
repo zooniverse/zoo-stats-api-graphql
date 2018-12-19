@@ -16,7 +16,7 @@ module Mutations
       if event_payload.empty?
         return { errors: [{"message" => "ArgumentError"}] }
       end
-      
+
       events_list = []
       event_json = JSON.parse(event_payload)
       # TODO: Add guard here to only ingest data that meets the schema
@@ -28,10 +28,23 @@ module Mutations
         events_list.append(Event.new(prepared_payload))
       end
 
-      ActiveRecord::Base.transaction do
-        events_list.each { |event| event.upsert! }
+      errors = []
+
+      begin
+        Event.transaction do
+          Event.import!(
+            events_list,
+            on_duplicate_key_update: {
+              conflict_target: %i(event_id event_type event_source event_time),
+              columns: %i(project_id workflow_id user_id data session_time country_name country_code city_name latitude longitude)
+            }
+          )
+        end
+      rescue ActiveRecord::StatementInvalid
+        errors << 'Payload contains duplicate rows'
       end
-      { errors: [] }
+
+      { errors: errors }
     end
 
     private

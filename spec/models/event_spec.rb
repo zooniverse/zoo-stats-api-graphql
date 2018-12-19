@@ -32,30 +32,4 @@ RSpec.describe Event, type: :model do
       expect(Event.find(pkey_find_attrs)).to eq(event)
     end
   end
-
-  describe "upsert" do
-    let(:event) { build(:event) }
-
-    let(:upsert_pk_keys) do
-      {
-        event_id: event.event_id,
-        event_type: event.event_type,
-        event_source: event.event_source,
-        event_time: event.event_time
-      }
-    end
-
-    it "should insert a new record if none exists for the primary key" do
-      expect{ event.upsert }.to change { Event.count }.from(0).to(1)
-    end
-
-    it "should overwrite an existing record when upserting" do
-      event.save
-      new_data_payload = { data: { "metadata" => "update_test" } }
-      updated_event_data = upsert_pk_keys.merge(new_data_payload)
-      new_upsert_event = build(:event, updated_event_data)
-      expect{ new_upsert_event.upsert }.not_to change { Event.count }
-      expect(new_upsert_event.reload.data).to eq(new_data_payload[:data])
-    end
-  end
 end

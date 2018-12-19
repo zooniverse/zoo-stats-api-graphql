@@ -24,10 +24,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_record_upsert (0.9.4)
-      activerecord (>= 5.0, < 6.0)
-      arel (> 7.0, < 10.0)
-      pg (>= 0.18, < 2.0)
     activejob (5.2.2)
       activesupport (= 5.2.2)
       globalid (>= 0.3.6)
@@ -37,6 +33,8 @@ GEM
       activemodel (= 5.2.2)
       activesupport (= 5.2.2)
       arel (>= 9.0)
+    activerecord-import (0.27.0)
+      activerecord (>= 3.2)
     activestorage (5.2.2)
       actionpack (= 5.2.2)
       activerecord (= 5.2.2)
@@ -198,7 +196,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_record_upsert
+  activerecord-import
   bootsnap (>= 1.1.0)
   byebug
   composite_primary_keys (~> 11.1)

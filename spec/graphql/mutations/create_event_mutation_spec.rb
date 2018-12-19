@@ -74,14 +74,34 @@ Rspec.describe ZooStatsSchema do
       end
     end
 
-    context 'when there is a repeated event' do
+    context 'when there is an upsert in the payload' do
+      let(:event) { build(:event) }
+      let(:new_session_time) { rand(3.5..9.7).round(3) }
+      let(:upsert_event_attributes) do
+        attrs = event.attributes
+        attrs[:session_time] = new_session_time
+        attrs
+      end
+      let(:event_payload) { JSON.dump([upsert_event_attributes]) }
+
+      it 'should upsert the data' do
+        event.save
+        expect { result }.not_to change { Event.count }
+        expect(event.reload.session_time).to eq(new_session_time)
+        errors = result["data"]["createEvent"]["errors"]
+        expect(errors).to be_empty
+      end
+    end
+
+    context 'when there is a repeated event in the payload' do
+      let(:event_attributes) { attributes_for(:event) }
       let(:event_attributes) { attributes_for(:event) }
       let(:event_payload) { JSON.dump([event_attributes, event_attributes]) }
 
-      it 'add only one row to the database without errors' do
-        expect { result }.to change { Event.count }.by 1
+      it 'raises an error with a decent error' do
+        expect { result }.not_to change { Event.count }
         errors = result["data"]["createEvent"]["errors"][0]
-        expect(errors).to be_nil
+        expect(errors).to eq('Payload contains duplicate rows')
       end
     end
 
@@ -142,12 +162,12 @@ module Transformers
     end
 
     def transform
-      payload["session_time"] = 1.0
-      payload["country_name"] = "United Kingdom"
-      payload["country_code"] = "GB"
-      payload["city_name"]    = "Oxford"
-      payload["latitude"]     = 100.1
-      payload["longitude"]    = -100.1
+      payload["session_time"] ||= 1.0
+      payload["country_name"] ||= "United Kingdom"
+      payload["country_code"] ||= "GB"
+      payload["city_name"]    ||= "Oxford"
+      payload["latitude"]     ||= 100.1
+      payload["longitude"]    ||= -100.1
       payload
     end
   end

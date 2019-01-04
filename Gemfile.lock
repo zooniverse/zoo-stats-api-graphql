@@ -80,7 +80,7 @@ GEM
     geocoder (1.5.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    graphql (1.8.11)
+    graphql (1.8.12)
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     jwt (1.5.6)

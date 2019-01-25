@@ -39,3 +39,7 @@ Once all the above steps complete you will have a working copy of the checked ou
 
 0. Run the tests
     * Run: `docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rspec" zoo_stats`
+
+#### Thanks
+
+This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.

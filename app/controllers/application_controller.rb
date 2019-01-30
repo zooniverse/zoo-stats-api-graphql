@@ -23,7 +23,7 @@ class ApplicationController < ActionController::API
     if ActiveRecord::Base.connected?
       "connected"
     else
-      "not connected"
+      "not-connected"
     end
   end
 end

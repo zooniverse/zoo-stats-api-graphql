@@ -1,10 +1,11 @@
 Rspec.describe 'ZooStatsApiGraphql', type: :request do
   describe '/' do
+    let(:cache_store) { Rails.cache }
     before do
-      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT 1 FROM events").and_return("test response")
-      cache_store = Rails.cache
-      expect(cache_store).to receive(:fetch).with("commit_id", expires_in: 10.days).and_return("test commit\n")
+      allow(ActiveRecord::Base).to receive(:connected?).and_return(true)
+      allow(cache_store).to receive(:fetch).with("commit_id", expires_in: 10.days).and_return("test commit\n")
     end
+
     it 'should return a health check response' do
       get '/'
       expected_response = {"status"=>"ok", "version"=>VERSION, "database_status"=>"connected", "commit_id"=>"test commit"}
@@ -17,12 +18,12 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
       {'HTTP_AUTHORIZATION' => 'Bearer FakeToken'}
     end
     let(:credential) { instance_double(Credential) }
-    
+
     before do
       allow(Credential).to receive(:new).and_return(credential)
       allow(ZooStatsSchema).to receive(:execute) { |query, params| params }
     end
-    
+
     describe 'graphql' do
       let(:params) do
         {
@@ -64,11 +65,11 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
     let(:headers) do
       {'HTTP_AUTHORIZATION' => ActionController::HttpAuthentication::Basic.encode_credentials(username, password)}
     end
-    
+
     before do
       allow(ZooStatsSchema).to receive(:execute) { |query, params| params }
     end
-    
+
     describe 'graphql' do
       let(:params) do
         {

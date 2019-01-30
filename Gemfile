@@ -31,5 +31,5 @@ group :test do
   gem 'faker', '~> 1.8', '>= 1.8.7'
   gem 'rspec-rails', '~> 3.8'
   gem 'rspec-graphql_matchers'
-  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
+  gem 'shoulda-matchers', '~> 3.1'
 end

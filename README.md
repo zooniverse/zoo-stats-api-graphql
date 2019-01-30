@@ -43,3 +43,5 @@ Once all the above steps complete you will have a working copy of the checked ou
 #### Thanks
 
 This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
+
+[![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)

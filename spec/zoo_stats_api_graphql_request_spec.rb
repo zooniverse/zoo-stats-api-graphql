@@ -1,7 +1,7 @@
 Rspec.describe 'ZooStatsApiGraphql', type: :request do
   describe '/' do
     before do
-      expect(ActiveRecord::Base).to receive(:connection).and_return(true)
+      expect(ActiveRecord::Base).to receive(:connected?).and_return(true)
       cache_store = Rails.cache
       expect(cache_store).to receive(:fetch).with("commit_id", expires_in: 10.days).and_return("test commit\n")
     end

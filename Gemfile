@@ -27,7 +27,7 @@ end
 
 group :test do
   gem 'database_cleaner', '~> 1.6', '>= 1.6.2'
-  gem 'factory_bot_rails', '~> 4.8', '>= 4.8.2'
+  gem 'factory_bot_rails', '~> 5.0'
   gem 'faker', '~> 1.8', '>= 1.8.7'
   gem 'rspec-rails', '~> 3.8'
   gem 'rspec-graphql_matchers'

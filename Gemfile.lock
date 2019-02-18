@@ -219,4 +219,4 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
 
 BUNDLED WITH
-   1.16.6
+   1.17.2

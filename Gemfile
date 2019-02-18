@@ -13,7 +13,6 @@ gem 'activerecord-import'
 gem 'geocoder'
 gem 'rack-cors', require: 'rack/cors'
 
-
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry-rails', '~> 0.3.9'

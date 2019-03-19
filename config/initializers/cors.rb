@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins /^https?:\/\/([a-z0-9-]+\.)?zooniverse\.org(:\d+)?$/
+    origins /^https?:\/\/([a-z0-9-]+\.)?([a-z0-9-]+\.)?zooniverse\.org(:\d+)?$/
 
     resource '*',
     headers: :any,

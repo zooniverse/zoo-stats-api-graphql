@@ -1,30 +1,49 @@
 #!groovy
 
-node {
-    checkout scm
+pipeline {
+  agent none
 
-    def dockerRepoName = 'zooniverse/zoo-stats-api-graphql'
-    def dockerImageName = "${dockerRepoName}:${BRANCH_NAME}"
-    def newImage = null
+  options {
+    disableConcurrentBuilds()
+  }
 
+  stages {
     stage('Build Docker image') {
-        newImage = docker.build(dockerImageName)
-        newImage.push()
+      agent any
+      steps {
+        script {
+          def dockerRepoName = 'zooniverse/zoo-stats-api-graphql'
+          def dockerImageName = "${dockerRepoName}:${GIT_COMMIT}"
+          def newImage = null
+
+          newImage = docker.build(dockerImageName)
+          if (BRANCH_NAME == 'master') {
+            newImage.push()
+            newImage.push('latest')
+          }
+        }
+      }
     }
-
-     if (BRANCH_NAME == 'master') {
-         stage('Update latest tag') {
-             newImage.push('latest')
-         }
-
-         stage('Deploy to Swarm') {
-             sh """
-                 cd "/var/jenkins_home/jobs/Zooniverse GitHub/jobs/operations/branches/master/workspace" && \
-                 ./hermes_wrapper.sh exec StandaloneAppsSwarm -- \
-                     docker stack deploy --prune \
-                     -c /opt/infrastructure/stacks/zoo-event-stats-graphql.yml \
-                     zoo-event-stats-graphql
-             """
-         }
-     }
+    stage('Deploy to Kubernetes') {
+      when { branch 'master' }
+      agent any
+      steps {
+        sh "kubectl apply -f kubernetes/"
+        sh "sed 's/__IMAGE_TAG__/${GIT_COMMIT}/g' kubernetes/deployment.tmpl | kubectl apply -f -"
+      }
+    }
+  }
+  post {
+    failure {
+      script {
+        if (BRANCH_NAME == 'master') {
+          slackSend (
+            color: '#FF0000',
+            message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
+            channel: "#ops"
+          )
+        }
+      }
+    }
+  }
 }

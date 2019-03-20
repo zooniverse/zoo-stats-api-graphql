@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoo-event-stats-graphql
+  labels:
+    app: zoo-event-stats-graphql
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zoo-event-stats-graphql
+  strategy:
+      type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: zoo-event-stats-graphql
+    spec:
+      containers:
+        - name: zoo-stats-api-graphql
+          image: zooniverse/zoo-stats-api-graphql:__IMAGE_TAG__
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          ports:
+            - containerPort: 80
+          env:
+            - name: RAILS_ENV
+              value: "production"
+            - name: RAILS_LOG_TO_STDOUT
+              value: "true"
+            - name: PORT
+              value: "80"
+            - name: RAILS_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: zoo-event-stats-graphql
+                  key: rails-master-key

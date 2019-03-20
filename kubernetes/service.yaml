@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo-event-stats-graphql
+spec:
+  selector:
+    app: zoo-event-stats-graphql
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort

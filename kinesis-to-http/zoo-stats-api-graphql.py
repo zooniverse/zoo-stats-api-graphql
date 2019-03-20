@@ -5,7 +5,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 HEADERS  = {"Content-Type": "application/json", "Accept": "application/json"}
-ENDPOINT = os.environ["GRAPHQL_ENDPOINT"]  # "https://stats.zooniverse.org/graphql"
+ENDPOINT = os.environ["GRAPHQL_ENDPOINT"]  # "https://graphql-stats.zooniverse.org/graphql"
 USERNAME = os.environ["GRAPHQL_MUTATION_USERNAME"]
 PASSWORD = os.environ["GRAPHQL_MUTATION_PASSWORD"]
 MUTATION = "mutation ($graphql_payload: String!){ createEvent(eventPayload: $graphql_payload){ errors } }"

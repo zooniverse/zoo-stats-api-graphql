@@ -1,16 +1,44 @@
 # Zoo stats
 [![Build Status](https://travis-ci.org/zooniverse/zoo-stats-api-graphql.svg?branch=master)](https://travis-ci.org/zooniverse/zoo-stats-api-graphql)
 
-### Setup Docker and Docker Compose
+#### API
+The stats service has a GraphQL API, https://graphql.org/ which differs to RESTful APIs.
 
-* Docker
-  * [OS X](https://docs.docker.com/installation/mac/) - Docker Machine
-  * [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) - Docker
-  * [Windows](http://docs.docker.com/installation/windows/) - Boot2Docker
+There is only one endpoint path for this API `/graphql` and it only supports the `POST` HTTP method for the `application/json` content type.
 
-* [Docker Compose](https://docs.docker.com/compose/)
+###### POST /graphql (application/json)
 
-#### Usage
+**Introspect the available operations**
+
+```
+curl -d '{"query": "{__schema {queryType {name fields {name}}mutationType {name fields {name}}}}"}' -H "Content-Type: application/json" -X POST https://graphql-stats.zooniverse.org/graphql
+```
+
+**Event type counts per interval**
+Retrieve the number of classifications for a specified event type for a known interval. Non-required attributes are `projectID` and `userId` to filter the results.
+
+Note: If you supply the the userId attribute you **must** provide a bearer token in the Authorization header, e.g. 
+`Authorization: Bearer <TOKEN>`
+
+You must supply and `eventType` and `interval`. Valid intervals are postgres intervals, e.g. `2 Days`, `24 Hours`, `60 Seconds`
+
+```
+{
+  statsCount(
+    eventType: "classification",
+    interval: "1 Day",
+    projectId: "${project.id}",
+    userId: "${user.id}"
+  ){
+    period,
+    count
+  }
+}
+```
+
+Note: `classification` events are currently the only supported event types.
+
+#### Getting Started
 
 1. Clone the repository `git clone https://github.com/zooniverse/zoo_stats_api_graphql`.
 
@@ -39,6 +67,15 @@ Once all the above steps complete you will have a working copy of the checked ou
 
 0. Run the tests
     * Run: `docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rspec" zoo_stats`
+
+### Setup Docker and Docker Compose
+
+* Docker
+  * [OS X](https://docs.docker.com/installation/mac/) - Docker Machine
+  * [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) - Docker
+  * [Windows](http://docs.docker.com/installation/windows/) - Boot2Docker
+
+* [Docker Compose](https://docs.docker.com/compose/)
 
 #### Thanks
 

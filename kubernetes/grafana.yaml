@@ -1,0 +1,123 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: zoo-event-stats-grafana-data
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "aws-efs"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoo-event-stats-grafana-app
+  labels:
+    app: zoo-event-stats-grafana-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zoo-event-stats-grafana-app
+  strategy:
+      type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: zoo-event-stats-grafana-app
+    spec:
+      containers:
+        - name: zoo-event-stats-grafana-app
+          image: grafana/grafana:5.3.2
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+          - name: zoo-event-stats-grafana-data
+            mountPath: "/var/lib/grafana"
+      volumes:
+      - name: zoo-event-stats-grafana-data
+        persistentVolumeClaim:
+          claimName: zoo-event-stats-grafana-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo-event-stats-grafana-app
+spec:
+  selector:
+    app: zoo-event-stats-grafana-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoo-event-stats-grafana-nginx
+  labels:
+    app: zoo-event-stats-grafana-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zoo-event-stats-grafana-nginx
+  strategy:
+      type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: zoo-event-stats-grafana-nginx
+    spec:
+      containers:
+        - name: zoo-event-stats-grafana-nginx
+          image: zooniverse/apps-nginx:xenial
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          ports:
+            - containerPort: 80
+          env:
+            - name: LOG_STDOUT
+              value: "true"
+          volumeMounts:
+          - name: zoo-event-stats-grafana-nginx-htpasswd
+            mountPath: "/etc/nginx/.htpasswd"
+            subPath: "htpasswd"
+            readOnly: true
+          - name: zoo-event-stats-grafana-nginx-config
+            mountPath: "/etc/nginx/sites-enabled"
+            readOnly: true
+      volumes:
+      - name: zoo-event-stats-grafana-nginx-htpasswd
+        secret:
+          secretName: zoo-event-stats-grafana-nginx-htpasswd
+      - name: zoo-event-stats-grafana-nginx-config
+        configMap:
+          name: zoo-event-stats-grafana-nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo-event-stats-grafana
+spec:
+  selector:
+    app: zoo-event-stats-grafana-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort

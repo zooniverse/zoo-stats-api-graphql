@@ -17,7 +17,7 @@ curl -d '{"query": "{__schema {queryType {name fields {name}}mutationType {name 
 **Event type counts per interval**
 Retrieve the number of classifications for a specified event type for a known interval. Non-required attributes are `projectID` and `userId` to filter the results.
 
-Note: If you supply the the userId attribute you **must** provide a bearer token in the Authorization header, e.g. 
+Note: If you supply the the userId attribute you **must** provide a bearer token in the Authorization header, e.g.
 `Authorization: Bearer <TOKEN>`
 
 You must supply and `eventType` and `interval`. Valid intervals are postgres intervals, e.g. `2 Days`, `24 Hours`, `60 Seconds`
@@ -67,6 +67,10 @@ Once all the above steps complete you will have a working copy of the checked ou
 
 0. Run the tests
     * Run: `docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rspec" zoo_stats`
+
+0. Get a console to interactively run / debug tests
+    * Run: `docker-compose run --rm -e RAILS_ENV=test --entrypoint="/bin/bash" zoo_stats`
+    * Then in the container run: `bundle exec rspec`
 
 ### Setup Docker and Docker Compose
 

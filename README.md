@@ -20,13 +20,15 @@ Retrieve the number of classifications for a specified event type for a known in
 Note: If you supply the the userId attribute you **must** provide a bearer token in the Authorization header, e.g.
 `Authorization: Bearer <TOKEN>`
 
-You must supply and `eventType` and `interval`. Valid intervals are postgres intervals, e.g. `2 Days`, `24 Hours`, `60 Seconds`
+You must supply and `eventType`, `interval` and `window`. Valid intervals are postgres intervals, e.g. `2 Days`, `24 Hours`, `60 Seconds`
+Valid windows are postgres intervals, e.g. `7 Days`, `2 Weeks`, `1 Month`, `1 Year`.
 
 ```
 {
   statsCount(
     eventType: "classification",
     interval: "1 Day",
+    window: "1 week",
     projectId: "${project.id}",
     userId: "${user.id}"
   ){

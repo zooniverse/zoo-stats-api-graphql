@@ -5,14 +5,16 @@ RSpec.describe Searchers do
     let(:users_id) { 123 }
     let(:event_types) { 'classification' }
     let(:time_bucket) { '1 day' }
+    let(:window) { '1 Week' }
     let(:arguments) do
       {
         interval:    time_bucket,
-        user_id:        users_id,
-        event_type:     event_types
+        user_id:     users_id,
+        event_type:  event_types,
+        window:      window
       }
     end
-    let(:start_time) { Time.zone.parse('2018-11-06 10:30:10') }
+    let(:start_time) { Time.zone.now - 4.days }
     let!(:generic_classifications) { create_list(:event, 3, event_time: start_time, event_type: 'classification') }
     let!(:generic_comments) { create_list(:event, 3, event_time: start_time, event_type: 'comment') }
 

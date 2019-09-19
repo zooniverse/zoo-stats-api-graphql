@@ -8,6 +8,7 @@ module Types
       description 'returns counts of event types grouped by interval (e.g. "1 day") with optional filtering by user, project and workflow ids'
       argument :interval, String, required: true
       argument :event_type, String, required: true
+      argument :window, String, required: true
       argument :user_id, ID, required: false
       argument :project_id, ID, required: false
       argument :workflow_id, ID, required: false

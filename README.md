@@ -51,11 +51,11 @@ Note: `classification` events are currently the only supported event types.
 0. Run `docker-compose build` to build the containers Panoptes API container. You will need to re-run this command on any changes to `Dockerfile`
 
 0. Install the gem dependencies for the application
-    * Run: `docker-compose run --rm --entrypoint="bundle install" zoo_stats`
+    * Run: `docker-compose run --rm zoo_stats bundle install`
 
 0. Create and run the application containers with `docker-compose up`
 
-0. If the above step reports a missing database error, kill the docker-compose process or open a new terminal window in the current directory and then run `docker-compose run --rm --entrypoint="bundle exec rake db:setup" zoo_stats` to setup the database. This command will launch a new Docker container, run the rake DB setup task, and then clean up the container.
+0. If the above step reports a missing database error, kill the docker-compose process or open a new terminal window in the current directory and then run `docker-compose run --rm zoo_stats bundle exec rake db:setup` to setup the database. This command will launch a new Docker container, run the rake DB setup task, and then clean up the container.
 
 0. Open up the application in your browser at http://localhost:3000
 
@@ -64,14 +64,14 @@ Once all the above steps complete you will have a working copy of the checked ou
 #### Testing
 
 1. Setup the test environment and database
-    * Run: `docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle install" zoo_stats`
-    * Run: `docker-compose run --rm -e RAILS_ENV=test --entrypoint="bundle exec rake db:setup" zoo_stats`
+    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle install`
+    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:setup`
 
 0. Run the tests
-    * Run: `docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rspec" zoo_stats`
+    * Run: `docker-compose run -T --rm -e RAILS_ENV=test zoo_stats bundle exec rspec`
 
 0. Get a console to interactively run / debug tests
-    * Run: `docker-compose run --rm -e RAILS_ENV=test --entrypoint="/bin/bash" zoo_stats`
+    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bash`
     * Then in the container run: `bundle exec rspec`
 
 ### Setup Docker and Docker Compose

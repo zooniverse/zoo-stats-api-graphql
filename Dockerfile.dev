@@ -7,8 +7,11 @@ RUN apt-get update && \
         git \
         supervisor \
         libpq-dev \
+        vim \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV EDITOR vim
 
 ADD ./Gemfile /rails_app/
 ADD ./Gemfile.lock /rails_app/

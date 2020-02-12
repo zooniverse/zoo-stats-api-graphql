@@ -48,10 +48,7 @@ Note: `classification` events are currently the only supported event types.
 
 0. `cd` into the cloned folder.
 
-0. Run `docker-compose build` to build the containers Panoptes API container. You will need to re-run this command on any changes to `Dockerfile`
-
-0. Install the gem dependencies for the application
-    * Run: `docker-compose run --rm zoo_stats bundle install`
+0. Run `docker-compose build` to build the containers Panoptes API container. You will need to re-run this command on any changes to `Dockerfile.dev`
 
 0. Create and run the application containers with `docker-compose up`
 
@@ -61,10 +58,12 @@ Note: `classification` events are currently the only supported event types.
 
 Once all the above steps complete you will have a working copy of the checked out code base. Keep your code up to date and rebuild the image on any code or configuration changes.
 
+Note: You will need to re-install the gem dependencies for the application if you modify the Gemfile
+    * Run: `docker-compose run --rm zoo_stats bundle install`
+
 #### Testing
 
 1. Setup the test environment and database
-    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle install`
     * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:setup`
 
 0. Run the tests

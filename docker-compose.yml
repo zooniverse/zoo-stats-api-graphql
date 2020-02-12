@@ -1,29 +1,27 @@
-timescale:
-  image: timescale/timescaledb-postgis:1.0.0-pg10
-  environment:
-    - "POSTGRES_USER=zoo_stats"
-    - "POSTGRES_PASSWORD=zoo_stats"
-  ports:
-    - "5432"
+version: '3'
+services:
+  timescale:
+    image: timescale/timescaledb-postgis:1.0.0-pg10
+    environment:
+      - "POSTGRES_USER=zoo_stats"
+      - "POSTGRES_PASSWORD=zoo_stats"
+    ports:
+      - "5432"
 
-gem_cache:
-  image: busybox
-  volumes:
-    - /gem_cache
+  zoo_stats:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/rails_app
+      - gem_cache:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    environment:
+      - "RAILS_ENV=development"
+      - "DISABLE_SPRING=true"
+    links:
+      - timescale:db
 
-zoo_stats:
-  dockerfile: Dockerfile.dev
-  build: ./
-  volumes:
-    - ./:/rails_app
-  volumes_from:
-    - gem_cache
-  ports:
-    - "3000:3000"
-  environment:
-    - "RAILS_ENV=development"
-    - "BUNDLE_PATH=/gem_cache"
-    - "BUNDLE_BIN=/gem_cache/bin"
-    - "DISABLE_SPRING=true"
-  links:
-    - timescale:db
+volumes:
+  gem_cache:

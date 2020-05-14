@@ -19,6 +19,13 @@ spec:
       containers:
         - name: zoo-stats-api-graphql
           image: zooniverse/zoo-stats-api-graphql:__IMAGE_TAG__
+          resources:
+               requests:
+                 memory: "350Mi"
+                 cpu: "10m"
+               limits:
+                 memory: "350Mi"
+                 cpu: "500m"
           imagePullPolicy: Always
           livenessProbe:
             httpGet:

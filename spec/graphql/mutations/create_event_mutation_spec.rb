@@ -68,9 +68,13 @@ Rspec.describe ZooStatsSchema do
       let(:event_3) { attributes_for(:event, event_source: nil) }
       let(:event_payload) { JSON.dump([event_1, event_2, event_3]) }
 
-      it 'reverts the batch and returns the error' do
-        expect { result }.not_to change { Event.count }
-        expect(result["errors"][0]["message"]).to eq("Validation failed: Event source can't be blank")
+      it 'does not add any records to the db' do
+        # rescue the operation here to allow the test to proceed
+        expect { result rescue  nil }.not_to change { Event.count } # rubocop:disable Style/RescueModifier
+      end
+
+      it 'raises an error and stops processing' do
+        expect { result }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
@@ -98,10 +102,13 @@ Rspec.describe ZooStatsSchema do
       let(:event_attributes) { attributes_for(:event) }
       let(:event_payload) { JSON.dump([event_attributes, event_attributes]) }
 
-      it 'raises an error with a decent error' do
-        expect { result }.not_to change { Event.count }
-        errors = result["data"]["createEvent"]["errors"][0]
-        expect(errors).to eq('Payload contains duplicate rows')
+      it 'does not add any records to the db' do
+        # rescue the operation here to allow the test to proceed
+        expect { result rescue  nil }.not_to change { Event.count } # rubocop:disable Style/RescueModifier
+      end
+
+      it 'raises the error' do
+        expect { result }.to raise_error(ActiveRecord::StatementInvalid)
       end
     end
 

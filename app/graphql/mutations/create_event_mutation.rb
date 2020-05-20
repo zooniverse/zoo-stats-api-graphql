@@ -28,23 +28,31 @@ module Mutations
         events_list.append(Event.new(prepared_payload))
       end
 
-      errors = []
-
-      begin
-        Event.transaction do
-          Event.import!(
-            events_list,
-            on_duplicate_key_update: {
-              conflict_target: %i(event_id event_type event_source event_time),
-              columns: %i(project_id workflow_id user_id data session_time country_name country_code city_name latitude longitude)
-            }
-          )
-        end
-      rescue ActiveRecord::StatementInvalid
-        errors << 'Payload contains duplicate rows'
+      Event.transaction do
+        Event.import!(
+          events_list,
+          on_duplicate_key_update: {
+            conflict_target: %i(event_id event_type event_source event_time),
+            columns: %i(project_id workflow_id user_id data session_time country_name country_code city_name latitude longitude)
+          }
+        )
       end
-
-      { errors: errors }
+      # Note: any import errors above will raise now
+      # (500 response) for the incoming mutation request
+      #
+      # Using 500 response status is not idomatic graphql
+      # but it is the easiest way to handle the lamdba function error processing
+      # as it stands, https://github.com/zooniverse/zoo-stats-api-graphql/blob/965ac156ad38281458fe347fdf9be5a21249db6d/kinesis-to-http/zoo-stats-api-graphql.py#L20
+      #
+      # Noting that graphql end points will return 200 even for errored states
+      # https://graphql-ruby.org/mutations/mutation_errors
+      # https://github.com/rmosolgo/graphql-ruby/blob/master/guides/errors/execution_errors.md
+      #
+      # the following error payloads ast it stands is useless now
+      # but is a placeholder to convert to errors as data in futur
+      # and modification of the lambda function result handler
+      # to check the response payloads for error states
+      { errors: [] }
     end
 
     private

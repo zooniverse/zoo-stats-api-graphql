@@ -1,12 +1,12 @@
 version: '3'
 services:
   timescale:
-    image: timescale/timescaledb-postgis:1.0.0-pg10
+    image: timescale/timescaledb:1.3.2-pg11
     environment:
       - "POSTGRES_USER=zoo_stats"
       - "POSTGRES_PASSWORD=zoo_stats"
     ports:
-      - "5432"
+      - "5433:5432"
 
   zoo_stats:
     build:
@@ -20,6 +20,7 @@ services:
     environment:
       - "RAILS_ENV=development"
       - "DISABLE_SPRING=true"
+      - "RAILS_MAX_THREADS=1"
     links:
       - timescale:db
 

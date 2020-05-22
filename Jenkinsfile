@@ -14,9 +14,9 @@ pipeline {
         script {
           def dockerRepoName = 'zooniverse/zoo-stats-api-graphql'
           def dockerImageName = "${dockerRepoName}:${GIT_COMMIT}"
-          def newImage = null
 
-          newImage = docker.build(dockerImageName)
+          def buildArgs = "--build-arg REVISION='${GIT_COMMIT}' ."
+          def newImage = docker.build(dockerImageName, buildArgs)
           if (BRANCH_NAME == 'master') {
             newImage.push()
             newImage.push('latest')

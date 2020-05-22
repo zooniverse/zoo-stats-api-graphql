@@ -12,6 +12,9 @@ RUN apt-get update && \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+ARG REVISION=''
+ENV REVISION=$REVISION
+
 ENV EDITOR vim
 
 ADD ./Gemfile /rails_app/

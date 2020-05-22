@@ -12,6 +12,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+      args:
+        REVISION: 559c-fake-revision-string-f9fb
     volumes:
       - ./:/rails_app
       - gem_cache:/usr/local/bundle

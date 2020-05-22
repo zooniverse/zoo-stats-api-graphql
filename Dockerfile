@@ -10,6 +10,9 @@ RUN apt-get update && \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+ARG REVISION=''
+ENV REVISION=$REVISION
+
 ADD ./Gemfile /rails_app/
 ADD ./Gemfile.lock /rails_app/
 
@@ -18,8 +21,6 @@ RUN bundle install --without development test
 
 ADD supervisord.conf /etc/supervisor/conf.d/zoo-events-stats-postgres.conf
 ADD ./ /rails_app/
-
-RUN (cd /rails_app && git log --format="%H" -n 1 > commit_id.txt)
 
 EXPOSE 80
 

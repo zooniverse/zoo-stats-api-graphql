@@ -1,4 +1,4 @@
-FROM ruby:2.5
+FROM ruby:2.6
 
 WORKDIR /rails_app
 
@@ -8,6 +8,7 @@ RUN apt-get update && \
         supervisor \
         libpq-dev \
         vim \
+        postgresql-client-11 \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -24,4 +25,4 @@ ADD ./ /rails_app/
 
 EXPOSE 80
 
-CMD /rails_app/scripts/docker/start.sh
+CMD ["/rails_app/scripts/docker/start.sh"]

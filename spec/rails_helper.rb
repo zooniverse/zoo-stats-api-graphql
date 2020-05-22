@@ -58,16 +58,27 @@ RSpec.configure do |config|
   # set up factory bot
   config.include FactoryBot::Syntax::Methods
 
-  # set up database cleaner
-  # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
   config.before(:suite) do
+    # set up database cleaner
+    # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
+
+    # setup the TimescaleDB hypertable for events
+    ActiveRecord::Base.connection.execute(
+      'DROP TRIGGER IF EXISTS ts_insert_blocker ON events;'
+    )
+    ActiveRecord::Base.connection.execute(
+      "SELECT create_hypertable('events', 'event_time', if_not_exists => TRUE);"
+    )
+    has_hypertables_sql = "SELECT * FROM timescaledb_information.hypertable WHERE table_name = 'events';"
+    if ActiveRecord::Base.connection.execute(has_hypertables_sql).to_a.empty?
+      raise "TimescaleDB missing hypertable on 'events' table"
+    end
   end
+
   # start the transaction strategy as examples are run
   config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+    DatabaseCleaner.cleaning { example.run }
   end
 end

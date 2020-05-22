@@ -48,7 +48,7 @@ Note: `classification` events are currently the only supported event types.
 
 0. `cd` into the cloned folder.
 
-0. Run `docker-compose build` to build the containers Panoptes API container. You will need to re-run this command on any changes to `Dockerfile.dev`
+0. Run `docker-compose build` to build the containers Panoptes API container. You will need to re-run this command on any changes to `Dockerfile.dev` (note the dev dockerfile, production is `Dockerfile`)
 
 0. Create and run the application containers with `docker-compose up`
 

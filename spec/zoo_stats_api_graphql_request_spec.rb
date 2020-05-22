@@ -1,14 +1,17 @@
 Rspec.describe 'ZooStatsApiGraphql', type: :request do
   describe '/' do
-    let(:cache_store) { Rails.cache }
     before do
       allow(ActiveRecord::Base).to receive(:connected?).and_return(true)
-      allow(cache_store).to receive(:fetch).with("commit_id", expires_in: 10.days).and_return("test commit\n")
     end
 
     it 'should return a health check response' do
       get '/'
-      expected_response = {"status"=>"ok", "version"=>VERSION, "database_status"=>"connected", "commit_id"=>"test commit"}
+      expected_response = {
+        'status' => 'ok',
+        'version' => VERSION,
+        'database_status' => 'connected',
+        'commit_id' => ENV['REVISION']
+      }
       expect(response.body).to eq(expected_response.to_json)
     end
   end

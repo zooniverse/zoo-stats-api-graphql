@@ -6,7 +6,7 @@ services:
       - "POSTGRES_USER=zoo_stats"
       - "POSTGRES_PASSWORD=zoo_stats"
     ports:
-      - "5433:5432"
+      - "5432:5432"
 
   zoo_stats:
     build:

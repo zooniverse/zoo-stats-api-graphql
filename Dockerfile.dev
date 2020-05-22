@@ -4,8 +4,6 @@ WORKDIR /rails_app
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
-        git \
-        supervisor \
         libpq-dev \
         vim \
         postgresql-client-11 \
@@ -23,9 +21,6 @@ ADD ./Gemfile.lock /rails_app/
 RUN bundle config --global jobs `cat /proc/cpuinfo | grep processor | wc -l | xargs -I % expr % - 1`
 RUN bundle install
 
-ADD supervisord.conf /etc/supervisor/conf.d/zoo-events-stats-postgres.conf
 ADD ./ /rails_app/
-
-EXPOSE 80
 
 CMD ["/rails_app/scripts/docker/start.sh"]

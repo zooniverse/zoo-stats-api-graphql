@@ -1,24 +1,15 @@
-language: ruby
-branches:
-  only:
-    - master
-rvm:
-  - 2.5.1
-sudo: false
 services:
   - docker
 
-before_install:
-  - docker-compose pull
-  - docker-compose build
-  - docker ps
+branches:
+  only:
+    - master
 
-install:
-  - docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle install" zoo_stats
+before_install:
+  - docker-compose build
 
 before_script:
-  # setup testing db
-  - docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rake db:setup" zoo_stats
+  - docker-compose run -T --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:setup
 
 script:
-  - docker-compose run -T --rm -e RAILS_ENV=test --entrypoint="bundle exec rspec" zoo_stats
+  - docker-compose run -T --rm -e RAILS_ENV=test zoo_stats bundle exec rspec

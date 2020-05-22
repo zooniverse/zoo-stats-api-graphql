@@ -23,4 +23,4 @@ RUN (cd /rails_app && git log --format="%H" -n 1 > commit_id.txt)
 
 EXPOSE 80
 
-CMD /rails_app/scripts/docker/start.sh
+CMD ["/rails_app/scripts/docker/start.sh"]

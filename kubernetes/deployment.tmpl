@@ -47,3 +47,10 @@ spec:
                 secretKeyRef:
                   name: zoo-event-stats-graphql
                   key: rails-master-key
+            - name: NEW_RELIC_APP_NAME
+              value: "Zoo Event Stats Graphql"
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: zoo-event-stats-graphql
+                  key: new-relic-license-key

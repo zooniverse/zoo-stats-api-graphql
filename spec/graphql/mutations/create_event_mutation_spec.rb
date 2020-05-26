@@ -102,13 +102,14 @@ Rspec.describe ZooStatsSchema do
       let(:event_attributes) { attributes_for(:event) }
       let(:event_payload) { JSON.dump([event_attributes, event_attributes]) }
 
-      it 'does not add any records to the db' do
-        # rescue the operation here to allow the test to proceed
-        expect { result rescue  nil }.not_to change { Event.count } # rubocop:disable Style/RescueModifier
+      it 'adds non-duplicate records to the db' do
+        expect { result }.to change { Event.count }.from(0).to(1)
       end
 
-      it 'raises the error' do
-        expect { result }.to raise_error(ActiveRecord::StatementInvalid)
+      it 'adds the correct Event into the database' do
+        result
+        stored_attributes = Event.last.attributes
+        expect(stored_attributes).to include(event_attributes.stringify_keys)
       end
     end
 

@@ -17,7 +17,11 @@ module Mutations
         return { errors: [{"message" => "ArgumentError"}] }
       end
 
-      events_list = []
+      # use a set to filter the incoming events to be unique
+      # based on their AR id hash, which in turn uses
+      # the composite primary key, same as upserts 🎉
+      # https://github.com/rails/rails/blob/e69ff43060c1194d2a3bd9b8d9e23f3ae26b84b5/activerecord/lib/active_record/core.rb#L432
+      events_list = Set.new
       event_json = JSON.parse(event_payload)
       # TODO: Add guard here to only ingest data that meets the schema
       # avoid ouroboros data and panoptes talk data until we have verified
@@ -25,12 +29,12 @@ module Mutations
       # return unless model.type && model.source == panoptes classificaiton
       event_json.each do |event|
         prepared_payload = Transformers.for(event).transform
-        events_list.append(Event.new(prepared_payload))
+        events_list.add(Event.new(prepared_payload))
       end
 
       Event.transaction do
         Event.import!(
-          events_list,
+          events_list.to_a, # have to pass array object for bulk import, https://github.com/zdennis/activerecord-import/issues/680
           on_duplicate_key_update: {
             conflict_target: %i(event_id event_type event_source event_time),
             columns: %i(project_id workflow_id user_id data session_time country_name country_code city_name latitude longitude)

@@ -34,14 +34,14 @@ spec:
           image: grafana/grafana:5.3.2
           resources:
                requests:
-                 memory: "30Mi"
+                 memory: "100Mi"
                  cpu: "10m"
                limits:
-                 memory: "30Mi"
+                 memory: "500Mi"
                  cpu: "500m"
           livenessProbe:
             httpGet:
-              path: /
+              path: /login
               port: 3000
             initialDelaySeconds: 2
             periodSeconds: 10
@@ -91,10 +91,10 @@ spec:
           image: zooniverse/apps-nginx:xenial
           resources:
                requests:
-                 memory: "60Mi"
+                 memory: "100Mi"
                  cpu: "10m"
                limits:
-                 memory: "60Mi"
+                 memory: "100Mi"
                  cpu: "500m"
           livenessProbe:
             tcpSocket:

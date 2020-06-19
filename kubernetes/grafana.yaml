@@ -50,6 +50,8 @@ spec:
           volumeMounts:
           - name: zoo-event-stats-grafana-data
             mountPath: "/var/lib/grafana"
+      securityContext:
+        fsGroup: 2000
       volumes:
       - name: zoo-event-stats-grafana-data
         persistentVolumeClaim:

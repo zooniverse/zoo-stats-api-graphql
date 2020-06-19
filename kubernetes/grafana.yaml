@@ -34,7 +34,7 @@ spec:
           image: grafana/grafana:5.3.2
           resources:
                requests:
-                 memory: "100Mi"
+                 memory: "500Mi"
                  cpu: "10m"
                limits:
                  memory: "500Mi"

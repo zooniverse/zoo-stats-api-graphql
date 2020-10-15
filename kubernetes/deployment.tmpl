@@ -5,7 +5,6 @@ metadata:
   labels:
     app: zoo-event-stats-graphql
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app: zoo-event-stats-graphql
@@ -22,7 +21,7 @@ spec:
           resources:
                requests:
                  memory: "350Mi"
-                 cpu: "10m"
+                 cpu: "250m"
                limits:
                  memory: "350Mi"
                  cpu: "500m"
@@ -54,3 +53,16 @@ spec:
                 secretKeyRef:
                   name: zoo-event-stats-graphql
                   key: new-relic-license-key
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: zoo-event-stats-graphql
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: zoo-event-stats-graphql
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

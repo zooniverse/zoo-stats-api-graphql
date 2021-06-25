@@ -9,7 +9,7 @@ namespace :db do
   end
 
   desc 'Create the groups continuous aggregates view'
-  task create_user_groups_continuous_aggregates: :environment do
+  task create_groups_continuous_aggregates: :environment do
     ActiveRecord::Base.connection.execute <<-SQL
       CREATE VIEW group_events_daily
       WITH (timescaledb.continuous) AS
@@ -30,7 +30,7 @@ namespace :db do
   end
 
   desc 'Setup the development env database'
-  task :'setup:development' => %w[db:create db:schema:load db:create_events_hypertable db:create_user_groups_continuous_aggregates]
+  task :'setup:development' => %w[db:create db:schema:load db:create_events_hypertable db:create_groups_continuous_aggregates]
 
   desc 'Setup and seed the development env database'
   task :'setup:seed:development' => ['db:setup:development', 'db:seed']

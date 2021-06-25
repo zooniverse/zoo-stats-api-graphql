@@ -8,7 +8,6 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
       get '/'
       expected_response = {
         'status' => 'ok',
-        'version' => VERSION,
         'database_status' => 'connected',
         'commit_id' => ENV['REVISION']
       }

@@ -52,7 +52,19 @@ Note: `classification` events are currently the only supported event types.
 
 0. Create and run the application containers with `docker-compose up`
 
-0. If the above step reports a missing database error, kill the docker-compose process or open a new terminal window in the current directory and then run `docker-compose run --rm zoo_stats bundle exec rake db:setup` to setup the database. This command will launch a new Docker container, run the rake DB setup task, and then clean up the container.
+0. If the above step reports a missing database error, kill the docker-compose process or open a new terminal window in the current directory and then to setup the database run
+
+Setup the development database without any data
+
+``` sh
+docker-compose run --rm zoo_stats bundle exec rake db:setup:development
+```
+
+Setup the development database with example data
+
+``` sh
+docker-compose run --rm zoo_stats bundle exec rake db:setup:seed:development
+```
 
 0. Open up the application in your browser at http://localhost:3000
 

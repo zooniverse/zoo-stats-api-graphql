@@ -21,7 +21,6 @@ services:
       - "3000:3000"
     environment:
       - "RAILS_ENV=development"
-      - "DISABLE_SPRING=true"
       - "RAILS_MAX_THREADS=1"
     links:
       - timescale:db

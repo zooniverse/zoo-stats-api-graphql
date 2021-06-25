@@ -2,8 +2,10 @@ class Generator
   attr_accessor :event_id
   CLASSIFICATION_TO_COMMENT_RATIO = 50
   NIL_USER_TO_LOGGED_IN_RATIO = 1
+  NIL_GROUP_TO_UNGROUPED_RATIO = 1
   PROJECT_ID_MAX = 10_000
   USER_ID_MAX = 1_000_000
+  GROUP_ID_MAX = 1_000
   WORKFLOW_ID_MAX = 10
   SESSION_TIME_MAX = 600.0
 
@@ -13,6 +15,7 @@ class Generator
 
   def generate_event
     user_id_options = [rand(1..USER_ID_MAX)]
+    group_id_options = [rand(1..GROUP_ID_MAX)]
     if rand(0..CLASSIFICATION_TO_COMMENT_RATIO) == 0
       # insert comment
       event_type = "comment"
@@ -23,8 +26,9 @@ class Generator
       event_type = "classification"
       session_time = rand(1..SESSION_TIME_MAX)
     end
-
-    time_stamp = Time.zone.parse('2018-09-23 05:45:09') + self.event_id.hours - rand(1..10).hours
+    # start generating data from last week to now
+    start_time = (Time.now.utc - 1.week).to_s
+    time_stamp = Time.zone.parse(start_time) + self.event_id.hours - rand(1..10).hours
 
     Event.create(
       {
@@ -35,6 +39,7 @@ class Generator
         'project_id':           rand(1..PROJECT_ID_MAX),
         'workflow_id':          rand(1..WORKFLOW_ID_MAX),
         'user_id':              user_id_options[rand(0..NIL_USER_TO_LOGGED_IN_RATIO)],
+        'group_id':             group_id_options[rand(0..NIL_GROUP_TO_UNGROUPED_RATIO)],
         'created_at':           time_stamp,
         'updated_at':           time_stamp,
         'data':                 {lang: "en"}.to_json,

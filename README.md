@@ -83,7 +83,7 @@ Note: You will need to re-install the gem dependencies for the application if yo
 
 0. Get a console to interactively run / debug tests
     * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bash`
-    * Then in the container run: `bundle exec rspec`
+    * Then in the container run: `bin/rspec` to run the test suite using Spring code loader (speeds up iterative testing)
 
 ### Setup Docker and Docker Compose
 

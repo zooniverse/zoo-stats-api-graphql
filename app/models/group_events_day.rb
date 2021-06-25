@@ -2,7 +2,7 @@
 
 # AR model over the 'group_events_day' continuous aggregate view
 # to ease the sql query formation
-class GroupEventsDaily < ApplicationRecord
+class GroupEventsDay < ApplicationRecord
   self.table_name = 'group_events_day'
   # save rails from failing if save is called (not strictly necessary)
   def readonly?
@@ -15,6 +15,6 @@ class GroupEventsDaily < ApplicationRecord
   #     SELECT * FROM group_events_day order by period ASC LIMIT 1;
   #
   # ActiveRecord
-  #     GroupEventsDaily.where(group_id: 124).order(period: :asc)
-  #     GroupEventsDaily.where(group_id: 124).where("period >= ?", "2021-06-18").order(period: :asc)
+  #     GroupEventsDay.where(group_id: 124).order(period: :asc)
+  #     GroupEventsDay.where(group_id: 124).where("period >= ?", "2021-06-18").order(period: :asc)
 end

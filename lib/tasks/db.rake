@@ -14,8 +14,10 @@ namespace :db do
       CREATE VIEW group_events_daily
       WITH (timescaledb.continuous) AS
       SELECT time_bucket(INTERVAL '1 day', event_time) AS period,
+            group_id,
             count(*) as count
       FROM events
+      WHERE group_id IS NOT NULL
       GROUP BY group_id, period;
     SQL
   end
@@ -27,6 +29,9 @@ namespace :db do
     SQL
   end
 
+  desc 'Setup the development env database'
+  task :'setup:development' => %w[db:create db:schema:load db:create_events_hypertable db:create_user_groups_continuous_aggregates]
+
   desc 'Setup and seed the development env database'
-  task :'setup:development' => %w[db:create db:schema:load db:create_events_hypertable db:create_user_groups_continuous_aggregates db:seed]
+  task :'setup:seed:development' => ['db:setup:development', 'db:seed']
 end

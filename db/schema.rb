@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_28_114907) do
+ActiveRecord::Schema.define(version: 2021_06_24_145152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2018_11_28_114907) do
     t.string "city_name"
     t.decimal "latitude"
     t.decimal "longitude"
+    t.bigint "group_id"
     t.index ["event_time"], name: "events_event_time_idx", order: :desc
     t.index ["event_type", "project_id"], name: "index_events_on_event_type_and_project_id"
     t.index ["event_type", "user_id"], name: "index_events_on_event_type_and_user_id"

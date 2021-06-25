@@ -3,8 +3,7 @@ class ApplicationController < ActionController::API
 
   def health
     render json: {
-      status: "ok",
-      version: VERSION,
+      status: 'ok',
       database_status: db_connection_status,
       commit_id: ENV['REVISION']
     }.to_json

@@ -76,7 +76,7 @@ Note: You will need to re-install the gem dependencies for the application if yo
 #### Testing
 
 1. Setup the test environment and database
-    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:setup`
+    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:create`
 
 0. Run the tests
     * Run: `docker-compose run -T --rm -e RAILS_ENV=test zoo_stats bundle exec rspec`

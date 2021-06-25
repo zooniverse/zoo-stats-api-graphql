@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'GroupEventsDay', type: :request do
-  fdescribe 'GET /counts/day/groups' do
+  describe 'GET /counts/day/groups' do
     let(:event) { create :group_event }
     before do
       event

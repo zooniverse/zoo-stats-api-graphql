@@ -37,4 +37,5 @@ group :test do
   gem 'rspec-rails'
   gem 'rspec-graphql_matchers'
   gem 'shoulda-matchers'
+  gem 'spring-commands-rspec'
 end

@@ -19,8 +19,7 @@ end
 
 
 group :development, :test do
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'pry-rails', '~> 0.3.9'
+  gem 'pry-rails'
   gem 'foreman'
   gem 'rubocop'
 end
@@ -35,7 +34,7 @@ group :test do
   gem 'database_cleaner', '~> 1.6', '>= 1.6.2'
   gem 'factory_bot_rails', '~> 4.8', '>= 4.8.2'
   gem 'faker', '~> 1.8', '>= 1.8.7'
-  gem 'rspec-rails', '~> 3.8'
+  gem 'rspec-rails'
   gem 'rspec-graphql_matchers'
-  gem 'shoulda-matchers', '~> 4.3'
+  gem 'shoulda-matchers'
 end

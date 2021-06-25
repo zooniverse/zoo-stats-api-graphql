@@ -11,7 +11,7 @@ namespace :db do
   desc 'Create the groups continuous aggregates view'
   task create_groups_continuous_aggregates: :environment do
     ActiveRecord::Base.connection.execute <<-SQL
-      CREATE VIEW group_events_daily
+      CREATE VIEW group_events_day
       WITH (timescaledb.continuous) AS
       SELECT time_bucket(INTERVAL '1 day', event_time) AS period,
             group_id,
@@ -25,7 +25,7 @@ namespace :db do
   desc 'Drop the groups continuous aggregates view'
   task drop_groups_continuous_aggregates: :environment do
     ActiveRecord::Base.connection.execute <<-SQL
-      DROP VIEW IF EXISTS group_events_daily CASCADE;
+      DROP VIEW IF EXISTS group_events_day CASCADE;
     SQL
   end
 

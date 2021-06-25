@@ -80,8 +80,8 @@ RSpec.configure do |config|
     Rake::Task['db:create_groups_continuous_aggregates'].invoke
     continuous_aggregates = 'SELECT view_name, materialization_hypertable FROM timescaledb_information.continuous_aggregates;'
     known_continuous_aggregates = ActiveRecord::Base.connection.execute(continuous_aggregates)
-    unless known_continuous_aggregates.find { |ca| ca['view_name'] == 'group_events_daily' }
-      raise "TimescaleDB missing 'group_events_daily' continuous aggregates view"
+    unless known_continuous_aggregates.find { |ca| ca['view_name'] == 'group_events_day' }
+      raise "TimescaleDB missing 'group_events_day' continuous aggregates view"
     end
   end
 

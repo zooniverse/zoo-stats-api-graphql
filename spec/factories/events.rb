@@ -14,5 +14,9 @@ FactoryBot.define do
     city_name { "Oxford" }
     latitude { 51.75222 }
     longitude { -1.25596 }
+
+    factory :group_event do
+      group_id { rand(1..10) }
+    end
   end
 end

@@ -4,9 +4,12 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort("The Rails environment is running in #{Rails.env} mode!") if Rails.env.production? || Rails.env.staging?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+
+# load the rake tasks for use in test db schema setup
+ZooStats::Application.load_tasks
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -59,23 +62,31 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
-    # set up database cleaner
-    # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
-    DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner.strategy = :transaction
+    # setup the TimescaleDB events hypertable & continuous aggregates for the test database
+    # 1. remove any existing continuous aggregates
+    Rake::Task['db:drop_groups_continuous_aggregates'].invoke
 
-    # setup the TimescaleDB hypertable for events
-    ActiveRecord::Base.connection.execute(
-      'DROP TRIGGER IF EXISTS ts_insert_blocker ON events;'
-    )
-    ActiveRecord::Base.connection.execute(
-      "SELECT create_hypertable('events', 'event_time', if_not_exists => TRUE);"
-    )
+    # 2. truncating all the tables in the db (clean slate)
+    DatabaseCleaner.clean_with(:truncation)
+
+    # 3. create the hypertables and check it exists
+    Rake::Task['db:create_events_hypertable'].invoke
     has_hypertables_sql = "SELECT * FROM timescaledb_information.hypertable WHERE table_name = 'events';"
     if ActiveRecord::Base.connection.execute(has_hypertables_sql).to_a.empty?
       raise "TimescaleDB missing hypertable on 'events' table"
     end
+
+    # 4. create the continuous aggregates views (groups) and check the required ones exist
+    Rake::Task['db:create_groups_continuous_aggregates'].invoke
+    continuous_aggregates = 'SELECT view_name, materialization_hypertable FROM timescaledb_information.continuous_aggregates;'
+    known_continuous_aggregates = ActiveRecord::Base.connection.execute(continuous_aggregates)
+    unless known_continuous_aggregates.find { |ca| ca['view_name'] == 'group_events_day' }
+      raise "TimescaleDB missing 'group_events_day' continuous aggregates view"
+    end
   end
+
+  # setup DB Cleaner to use the faster transaction strategy
+  DatabaseCleaner.strategy = :transaction
 
   # start the transaction strategy as examples are run
   config.around(:each) do |example|

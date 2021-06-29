@@ -2,43 +2,10 @@
 [![Build Status](https://travis-ci.org/zooniverse/zoo-stats-api-graphql.svg?branch=master)](https://travis-ci.org/zooniverse/zoo-stats-api-graphql)
 
 #### API
-The stats service has a GraphQL API, https://graphql.org/ which differs to RESTful APIs.
 
-There is only one endpoint path for this API `/graphql` and it only supports the `POST` HTTP method for the `application/json` content type.
+The stats service has a GraphQL API, https://graphql.org/ and a RESTful API.
 
-###### POST /graphql (application/json)
-
-**Introspect the available operations**
-
-```
-curl -d '{"query": "{__schema {queryType {name fields {name}}mutationType {name fields {name}}}}"}' -H "Content-Type: application/json" -X POST https://graphql-stats.zooniverse.org/graphql
-```
-
-**Event type counts per interval**
-Retrieve the number of classifications for a specified event type for a known interval. Non-required attributes are `projectID` and `userId` to filter the results.
-
-Note: If you supply the the userId attribute you **must** provide a bearer token in the Authorization header, e.g.
-`Authorization: Bearer <TOKEN>`
-
-You must supply and `eventType`, `interval` and `window`. Valid intervals are postgres intervals, e.g. `2 Days`, `24 Hours`, `60 Seconds`
-Valid windows are postgres intervals, e.g. `7 Days`, `2 Weeks`, `1 Month`, `1 Year`.
-
-```
-{
-  statsCount(
-    eventType: "classification",
-    interval: "1 Day",
-    window: "1 week",
-    projectId: "${project.id}",
-    userId: "${user.id}"
-  ){
-    period,
-    count
-  }
-}
-```
-
-Note: `classification` events are currently the only supported event types.
+See [the API docs](./docs/API.md) for more details
 
 #### Getting Started
 
@@ -52,7 +19,19 @@ Note: `classification` events are currently the only supported event types.
 
 0. Create and run the application containers with `docker-compose up`
 
-0. If the above step reports a missing database error, kill the docker-compose process or open a new terminal window in the current directory and then run `docker-compose run --rm zoo_stats bundle exec rake db:setup` to setup the database. This command will launch a new Docker container, run the rake DB setup task, and then clean up the container.
+0. If the above step reports a missing database error, kill the docker-compose process or open a new terminal window in the current directory and then to setup the database run
+
+Setup the development database without any data
+
+``` sh
+docker-compose run --rm zoo_stats bundle exec rake db:setup:development
+```
+
+Setup the development database with example data
+
+``` sh
+docker-compose run --rm zoo_stats bundle exec rake db:setup:seed:development
+```
 
 0. Open up the application in your browser at http://localhost:3000
 
@@ -64,14 +43,14 @@ Note: You will need to re-install the gem dependencies for the application if yo
 #### Testing
 
 1. Setup the test environment and database
-    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:setup`
+    * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bundle exec rake db:create`
 
 0. Run the tests
     * Run: `docker-compose run -T --rm -e RAILS_ENV=test zoo_stats bundle exec rspec`
 
 0. Get a console to interactively run / debug tests
     * Run: `docker-compose run --rm -e RAILS_ENV=test zoo_stats bash`
-    * Then in the container run: `bundle exec rspec`
+    * Then in the container run: `bin/rspec` to run the test suite using Spring code loader (speeds up iterative testing)
 
 ### Setup Docker and Docker Compose
 

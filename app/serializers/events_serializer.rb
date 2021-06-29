@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# simple PORO json formatter for serialization
+# that applies a limit and order to AR scopes
+#
+# look at adding a pagination solution, perhaps combined with a serializer..
+# we don't need format of json-api https://github.com/stas/jsonapi.rb
+# but we do like the pagination, sorting and filtering functions
 class EventsSerializer
   attr_reader :events
 

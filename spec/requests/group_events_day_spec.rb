@@ -39,7 +39,7 @@ RSpec.describe 'GroupEventsDay', type: :request do
 
     it 'respects the order param' do
       expected_results = { events_over_time: { buckets: formatted_events.reverse } }
-      get group_events_day_index_path, params: { order: :desc }
+      get group_events_day_index_path, params: { order: 'desc' }
       expect(response.body).to eq(expected_results.to_json)
     end
   end

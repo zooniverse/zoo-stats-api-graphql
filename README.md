@@ -2,43 +2,10 @@
 [![Build Status](https://travis-ci.org/zooniverse/zoo-stats-api-graphql.svg?branch=master)](https://travis-ci.org/zooniverse/zoo-stats-api-graphql)
 
 #### API
-The stats service has a GraphQL API, https://graphql.org/ which differs to RESTful APIs.
 
-There is only one endpoint path for this API `/graphql` and it only supports the `POST` HTTP method for the `application/json` content type.
+The stats service has a GraphQL API, https://graphql.org/ and a RESTful API.
 
-###### POST /graphql (application/json)
-
-**Introspect the available operations**
-
-```
-curl -d '{"query": "{__schema {queryType {name fields {name}}mutationType {name fields {name}}}}"}' -H "Content-Type: application/json" -X POST https://graphql-stats.zooniverse.org/graphql
-```
-
-**Event type counts per interval**
-Retrieve the number of classifications for a specified event type for a known interval. Non-required attributes are `projectID` and `userId` to filter the results.
-
-Note: If you supply the the userId attribute you **must** provide a bearer token in the Authorization header, e.g.
-`Authorization: Bearer <TOKEN>`
-
-You must supply and `eventType`, `interval` and `window`. Valid intervals are postgres intervals, e.g. `2 Days`, `24 Hours`, `60 Seconds`
-Valid windows are postgres intervals, e.g. `7 Days`, `2 Weeks`, `1 Month`, `1 Year`.
-
-```
-{
-  statsCount(
-    eventType: "classification",
-    interval: "1 Day",
-    window: "1 week",
-    projectId: "${project.id}",
-    userId: "${user.id}"
-  ){
-    period,
-    count
-  }
-}
-```
-
-Note: `classification` events are currently the only supported event types.
+See [the API docs](./docs/API.md) for more details
 
 #### Getting Started
 

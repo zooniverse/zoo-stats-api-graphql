@@ -1,0 +1,20 @@
+name: Zooni CI
+on:
+  pull_request:
+  push: { branches: master }
+env:
+  RAILS_ENV: test
+  DISABLE_SPRING: 1
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker containers and run tests
+        run: |
+          docker-compose build
+          docker-compose run -T --rm zoo_stats bundle exec rake db:setup
+          docker-compose run -T --rm zoo_stats bundle exec rspec
+
+

@@ -20,7 +20,7 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
     let(:headers) do
       {'HTTP_AUTHORIZATION' => 'Bearer FakeToken'}
     end
-    let(:credential) { instance_double(Credential) }
+    let(:credential) { Credential.new('FakeToken') }
 
     before do
       allow(Credential).to receive(:new).and_return(credential)
@@ -48,15 +48,44 @@ Rspec.describe 'ZooStatsApiGraphql', type: :request do
         let(:current_user) { 123 }
         let(:admin_status) { false }
         before do
-          expect(credential).to receive(:ok?).and_return(true)
-          expect(credential).to receive(:current_user_id).and_return(current_user)
-          expect(credential).to receive(:current_admin_status).and_return(admin_status)
+          allow(credential).to receive(:ok?).and_return(true)
+          allow(credential).to receive(:current_user_id).and_return(current_user)
+          allow(credential).to receive(:current_admin_status).and_return(admin_status)
         end
+
         it 'should set correct context from auth header' do
           post '/graphql', params: params, headers: headers
           context_param = JSON.parse(response.body)["context"]
           expect(context_param["current_user"]).to eq(current_user)
           expect(context_param["admin"]).to eq(admin_status)
+        end
+      end
+
+      context 'with an expired token' do
+        let(:current_user) { 123 }
+        let(:admin_status) { false }
+        before do
+          allow(credential).to receive(:jwt_payload).and_raise(JWT::ExpiredSignature)
+        end
+
+        it 'should not set context' do
+          post '/graphql', params: params, headers: headers
+          context_param = JSON.parse(response.body)["context"]
+          expect(context_param["current_user"]).to be_nil
+        end
+      end
+
+      context 'with an invalid token' do
+        let(:current_user) { 123 }
+        let(:admin_status) { false }
+        before do
+          allow(credential).to receive(:jwt_payload).and_raise(JWT::VerificationError)
+        end
+
+        it 'should not set context' do
+          post '/graphql', params: params, headers: headers
+          context_param = JSON.parse(response.body)["context"]
+          expect(context_param["current_user"]).to be_nil
         end
       end
     end

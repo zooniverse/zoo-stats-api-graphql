@@ -23,7 +23,7 @@ class Credential
   def logged_in?
     return false unless jwt_payload.present?
     jwt_payload['login'].present?
-  rescue JWT::ExpiredSignature
+  rescue JWT::ExpiredSignature, JWT::VerificationError
     false
   end
 
